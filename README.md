@@ -1,2 +1,1 @@
-# LibGodotSharp
-This is the project that uses libgodot to allow Godot to be used as a C# library
+# This for GD exstions for csharp and a system for csharp to use libgodot
