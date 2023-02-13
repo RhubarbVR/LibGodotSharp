@@ -1,4 +1,4 @@
-# This for GD exstions for csharp and a system for csharp to use libgodot
+# This for csharp project to use libgodot
 this uses net standard 2 in the core so people can use net framework or net core /.net 
 
 ![image](https://user-images.githubusercontent.com/46481567/218472227-820c0188-87f7-43be-8125-dc82c6f0c907.png)
