@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpGenerator", "sharp_gen
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibGodotSharp", "libgodotsharp\LibGodotSharp.csproj", "{3BBAE65F-9139-4C0D-847D-CF36A85B0BE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibGodotSharp", "TestLibGodotSharp\TestLibGodotSharp.csproj", "{0FA5C907-7D8E-4D30-AA66-0628ED86509E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLibGodotSharp", "TestLibGodotSharp\TestLibGodotSharp.csproj", "{0FA5C907-7D8E-4D30-AA66-0628ED86509E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SharpGenerator": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

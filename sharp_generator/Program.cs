@@ -7,7 +7,7 @@ namespace SharpGenerator
     {
         public static IntPtr GodotLibrary;
         public static string GodotRootDir;
-        public static bool skipScons = true;
+        public static bool skipScons = false;
         public static void Warn(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -59,30 +59,30 @@ namespace SharpGenerator
             {
                 path = RuntimeInformation.ProcessArchitecture switch
                 {
-                    Architecture.X64 => Path.Combine(path, $"godot.windows.editor.x86_64.dll"),
-                    Architecture.Arm64 => Path.Combine(path, $"godot.windows.editor.arm64.dll"),
-                    Architecture.Arm => Path.Combine(path, $"godot.windows.editor.arm32.dll"),
-                    _ => Path.Combine(path, $"godot.windows.editor.x86_32.dll"),
+                    Architecture.X64 => Path.Combine(path, $"godot.windows.editor.dev.x86_64.dll"),
+                    Architecture.Arm64 => Path.Combine(path, $"godot.windows.editor.dev.arm64.dll"),
+                    Architecture.Arm => Path.Combine(path, $"godot.windows.editor.dev.arm32.dll"),
+                    _ => Path.Combine(path, $"godot.windows.editor.dev.x86_32.dll"),
                 };
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 path = RuntimeInformation.ProcessArchitecture switch
                 {
-                    Architecture.X64 => Path.Combine(path, $"godot.macos.editor.x86_64.dylib"),
-                    Architecture.Arm64 => Path.Combine(path, $"godot.macos.editor.arm64.dylib"),
-                    Architecture.Arm => Path.Combine(path, $"godot.macos.editor.arm32.dylib"),
-                    _ => Path.Combine(path, $"godot.macos.editor.x86_32.dylib"),
+                    Architecture.X64 => Path.Combine(path, $"godot.macos.editor.dev.x86_64.dylib"),
+                    Architecture.Arm64 => Path.Combine(path, $"godot.macos.editor.dev.arm64.dylib"),
+                    Architecture.Arm => Path.Combine(path, $"godot.macos.editor.dev.arm32.dylib"),
+                    _ => Path.Combine(path, $"godot.macos.editor.dev.x86_32.dylib"),
                 };
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 path = RuntimeInformation.ProcessArchitecture switch
                 {
-                    Architecture.X64 => Path.Combine(path, $"godot.linuxbsd.editor.x86_64.so"),
-                    Architecture.Arm64 => Path.Combine(path, $"godot.linuxbsd.editor.arm64.so"),
-                    Architecture.Arm => Path.Combine(path, $"godot.linuxbsd.editor.arm32.so"),
-                    _ => Path.Combine(path, $"godot.linuxbsd.editor.x86_32.so"),
+                    Architecture.X64 => Path.Combine(path, $"godot.linuxbsd.editor.dev.x86_64.so"),
+                    Architecture.Arm64 => Path.Combine(path, $"godot.linuxbsd.editor.dev.arm64.so"),
+                    Architecture.Arm => Path.Combine(path, $"godot.linuxbsd.editor.dev.arm32.so"),
+                    _ => Path.Combine(path, $"godot.linuxbsd.editor.dev.x86_32.so"),
                 };
             }
             if (!File.Exists(path))
@@ -114,7 +114,7 @@ namespace SharpGenerator
                 {
                     throw new Exception("Failed to laod godot");
                 }
-                if (godot_main(2, new string[] { "libgodot", "--dump-extension-api" }) != 0)
+                if (godot_main(2, new string[] { "libgodot", "--dump-extension-api" ,"-v" }) != 0)
                 {
                     throw new Exception("Godot had error");
                 }

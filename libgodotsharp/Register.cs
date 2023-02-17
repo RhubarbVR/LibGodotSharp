@@ -73,7 +73,7 @@ namespace Generators
 						//free_property_list_func = &FreePropertyList,
 						//property_can_revert_func = &PropertyCanConvert,
 						//property_get_revert_func = &PropertyGetRevert,
-						notification_func = (IntPtr)({{(notification ? $"Engine.IsEditorHint()? 0 : SaftyRapper.GetFunctionPointerForDelegate(__Notification)" : "0")}}),
+						notification_func = (IntPtr)({{(notification ? $"Engine.IsEditorHint()? (IntPtr)0 : SaftyRapper.GetFunctionPointerForDelegate(__Notification)" : "0")}}),
 						//to_string_func = &ToString,
 						//reference_func = &Reference,
 						//unreference_func = &Unreference,
