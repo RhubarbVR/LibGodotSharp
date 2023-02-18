@@ -11,23 +11,25 @@ jobs:
   build:
 
     strategy:
+      fail-fast: false
       matrix:
-        configuration: [Debug, Release]
+        configuration: [Release]
 
-    runs-on: ubuntu-latest  
+    runs-on: "ubuntu-20.04"
     
     steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
+    - uses: actions/checkout@v3
         
     - name: Set up Java 11
       uses: actions/setup-java@v3
       with:
         distribution: temurin
         java-version: 11
-        
+    
+    - name: Setup Godot build cache
+      uses: ./.github/actions/godot-cache
+      continue-on-error: true
+
     - name: Check out libgodot
       uses: actions/checkout@master
       with:
@@ -35,7 +37,10 @@ jobs:
 
     - name: Setup python and scons
       uses: ./.github/actions/godot-deps
-
+    
+    - name: Setup GCC problem matcher
+      uses: ammaraskar/gcc-problem-matcher@master
+    
     - name: Linux Compilation (x86)
       uses: ./.github/actions/godot-build
       with:
