@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "TestLibGodotSharp": {
-      "commandName": "Project",
-      "nativeDebugging": true,
-      "hotReloadEnabled": false
-    }
-  }
-}

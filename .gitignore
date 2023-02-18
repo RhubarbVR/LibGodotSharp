@@ -351,3 +351,4 @@ MigrationBackup/
 
 libgodotsharp/Generated/
 libgodotsharp/Generated/*
+LibGodotSharpAndroid/godot-lib.template_debug.aar

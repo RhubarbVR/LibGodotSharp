@@ -43,6 +43,7 @@ namespace Generators
 			using System.Runtime.CompilerServices;
 			using System.Runtime.InteropServices;
 			using GDExtension;
+			using System;
 			using static GDExtension.Native;
 			namespace {{c.ContainingNamespace}};
 			public unsafe partial class {{c.Name}} : {{c.BaseType.Name}} {
