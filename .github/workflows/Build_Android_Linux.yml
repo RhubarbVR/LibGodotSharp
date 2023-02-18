@@ -1,0 +1,97 @@
+name: BuildGodot
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    runs-on: ubuntu-latest  
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        
+    - name: Set up Java 11
+      uses: actions/setup-java@v3
+      with:
+        distribution: temurin
+        java-version: 11
+        
+    - name: Check out libgodot
+      uses: actions/checkout@master
+      with:
+        repository: RhubarbVR/godot-lib
+
+    - name: Setup python and scons
+      uses: ./.github/actions/godot-deps
+
+    - name: Linux Compilation (x86)
+      uses: ./.github/actions/godot-build
+      with:
+          sconsflags: arch=x86
+          platform: linuxbsd
+          target: template_release
+          tests: false
+          
+    - name: Linux Compilation (x86_64)
+      uses: ./.github/actions/godot-build
+      with:
+          sconsflags: arch=x86_64
+          platform: linuxbsd
+          target: template_release
+          tests: false
+
+    - name: Android Compilation (x86)
+      uses: ./.github/actions/godot-build
+      with:
+          sconsflags: arch=x86
+          platform: android
+          target: template_release
+          tests: false
+          
+    - name: Android Compilation (x86_64)
+      uses: ./.github/actions/godot-build
+      with:
+          sconsflags: arch=x86_64
+          platform: android
+          target: template_release
+          tests: false
+
+    - name: Compilation (arm32)
+      uses: ./.github/actions/godot-build
+      with:
+          sconsflags: arch=arm32
+          platform: android
+          target: template_release
+          tests: false
+
+    - name: Compilation (arm64)
+      uses: ./.github/actions/godot-build
+      with:
+          sconsflags: arch=arm64
+          platform: android
+          target: template_release
+          tests: false
+
+    - name: Generate Godot templates
+      run: |
+          cd platform/android/java
+          ./gradlew generateGodotTemplates
+          cd ../../..
+          ls -l bin/
+          
+    - name: Upload artifact
+      uses: ./.github/actions/upload-artifact
+
+
