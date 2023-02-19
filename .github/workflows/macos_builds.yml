@@ -1,0 +1,80 @@
+name: 🍎 macOS and ios Builds
+on: [push, pull_request]
+
+# Global Settings
+env:
+  # Only used for the cache key. Increment version to force clean build.
+  GODOT_BASE_BRANCH: master
+  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+concurrency:
+  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-macOS
+  cancel-in-progress: true
+
+jobs:
+  build-macos-ios:
+    runs-on: "macos-latest"
+    name: ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Macos X64
+            cache-name: macos-template-release64
+            target: template_release
+            sconsflags: library_type=shared_library arch=x86_64
+            bin: "./bin/libgodot.macos.template_release.x86_64.dylib"
+            artifact: true
+            platform: macos
+            
+          - name: Macos Arm 64
+            cache-name: macos-template-release Arm64
+            target: template_release
+            sconsflags: library_type=shared_library arch=arm64
+            bin: "./bin/libgodot.macos.template_release.arm64.dylib"
+            artifact: true
+            platform: macos
+
+          - name: IOS Arm 64
+            cache-name: ios-template-release Arm64
+            target: template_release
+            sconsflags: library_type=shared_library arch=arm64
+            bin: "./bin/libgodot.ios.template_release.arm64.dylib"
+            artifact: true
+            platform: ios
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Godot build cache
+        uses: ./.github/actions/godot-cache
+        with:
+          cache-name: ${{ matrix.cache-name }}
+        continue-on-error: true
+
+      - name: Setup python and scons
+        uses: ./.github/actions/godot-deps
+
+      - name: Setup Vulkan SDK
+        run: |
+          sh misc/scripts/install_vulkan_sdk_macos.sh
+      - name: Compilation
+        uses: ./.github/actions/godot-build
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} ${{ matrix.sconsflags }}
+          platform: ${{ matrix.platform }}
+          target: ${{ matrix.target }}
+          tests: false
+          
+      - name: Prepare artifact
+        run: |
+          strip bin/godot.*
+          chmod +x bin/godot.*
+
+      - name: Upload artifact
+        uses: ./.github/actions/upload-artifact
+        if: ${{ matrix.artifact }}
+        with:
+          name: ${{ matrix.cache-name }}
