@@ -80,14 +80,6 @@ jobs:
           target: ${{ matrix.target }}
           tests: false
 
-      - name: Prepare artifact
-        if: ${{ matrix.artifact }}
-        run: |
-          strip godot/bin/godot.* || true
-          strip godot/bin/libgodot.* || true
-          chmod +x godot/bin/godot.* || true
-          chmod +x godot/bin/libgodot.* || true
-
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
         if: ${{ matrix.artifact }}

@@ -59,7 +59,8 @@ jobs:
 
       - name: Setup Vulkan SDK
         run: |
-          sh misc/scripts/install_vulkan_sdk_macos.sh
+          sh godot/misc/scripts/install_vulkan_sdk_macos.sh
+          
       - name: Compilation
         uses: ./.github/actions/godot-build
         with:
@@ -67,11 +68,6 @@ jobs:
           platform: ${{ matrix.platform }}
           target: ${{ matrix.target }}
           tests: false
-          
-      - name: Prepare artifact
-        run: |
-          strip bin/godot.*
-          chmod +x bin/godot.*
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
