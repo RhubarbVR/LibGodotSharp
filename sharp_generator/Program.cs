@@ -150,12 +150,8 @@ namespace SharpGenerator
             {
                 Directory.Delete(ginDir, true);
             }
-            var docs = Path.Combine(GodotRootDir, "doc", "classes") + "/";
-            if (Directory.Exists(ginDir))
-            {
-                Directory.Delete(ginDir, true);
-            }
             Directory.CreateDirectory(ginDir);
+            var docs = Path.Combine(GodotRootDir, "doc", "classes") + "/";
             var configName = "float_32";
             var api = Api.Create(pathToGenJson);
             var convert = new Convert(api, ginDir, docs, configName);
