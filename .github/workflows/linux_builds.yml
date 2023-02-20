@@ -1,4 +1,4 @@
-name: 🐧 Linux and 🏁 Windows Builds
+name: 🐧 Linux
 on: [push, pull_request]
 
 # Global Settings
@@ -10,7 +10,7 @@ env:
   DOTNET_CLI_TELEMETRY_OPTOUT: true
 
 concurrency:
-  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-linux-windows
+  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-linux
   cancel-in-progress: true
 
 jobs:
