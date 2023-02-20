@@ -74,7 +74,6 @@ jobs:
           platform: android
           target: template_release
           tests: false
-        continue-on-error: true
         
       - name: Compilation (x64)
         uses: ./.github/actions/godot-build
@@ -83,11 +82,10 @@ jobs:
           platform: android
           target: template_release
           tests: false
-        continue-on-error: true
 
       - name: Generate Godot templates
         run: |
-          cd platform/android/java
+          cd godot/platform/android/java
           ./gradlew assemble
           cd ../../..
           ls -l bin/
