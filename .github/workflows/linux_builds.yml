@@ -43,6 +43,7 @@ jobs:
       - name: Linux dependencies for gold linker
         run: |
           sudo apt-get install -qq binutils
+          sudo apt-get install gcc-multilib
 
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
