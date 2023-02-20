@@ -44,6 +44,7 @@ jobs:
         run: |
           sudo apt-get install -qq binutils
           sudo apt-get install gcc-multilib
+          sudo apt-get install gcc-4.8-multilib g++-4.8-multilib
 
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
