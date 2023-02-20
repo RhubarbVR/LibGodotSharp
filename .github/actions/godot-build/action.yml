@@ -23,13 +23,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Install llvm-mingw
-      shell: bash
-      run: |
-        curl -LO https://github.com/mstorsjo/llvm-mingw/releases/download/20230130/llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64.tar.xz
-        tar -xf llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64.tar.xz
-        mv llvm-mingw-20230130-ucrt-ubuntu-18.04-x86_64 llvm-mingw
-      
     - name: Scons Build
       shell: sh
       env:
