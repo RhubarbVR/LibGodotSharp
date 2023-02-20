@@ -28,14 +28,7 @@ jobs:
             bin: "./bin/libgodot.linuxbsd.template_release.x86_64.so"
             artifact: true
             platform: linuxbsd
-          
-          - name: Linux Libgodot X86
-            cache-name: linux-template-release86
-            target: template_release
-            sconsflags: library_type=shared_library arch=x86
-            bin: "./bin/libgodot.linuxbsd.template_release.x86.so"
-            artifact: true
-            platform: linuxbsd
+
 
     steps:
       - uses: actions/checkout@v3
@@ -43,8 +36,6 @@ jobs:
       - name: Linux dependencies for gold linker
         run: |
           sudo apt-get install -qq binutils
-          sudo apt-get install gcc-multilib
-          sudo apt-get install gcc-4.8-multilib g++-4.8-multilib
 
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
