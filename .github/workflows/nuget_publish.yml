@@ -72,38 +72,73 @@ jobs:
           wait-interval: 10          
 
       - name: Download artifact macos-template-release64
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: workflow_name.yml
+          workflow_conclusion: success
+          pr: ${{github.event.pull_request.number}}
+          commit: ${{github.event.pull_request.head.sha}}
           name: 'macos-template-release64'
           
       - name: Download artifact macos-template-release-Arm64
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: workflow_name.yml
+          workflow_conclusion: success
+          pr: ${{github.event.pull_request.number}}
+          commit: ${{github.event.pull_request.head.sha}}
           name: 'macos-template-release-Arm64'
 
       - name: Download artifact ios-template-release-Arm64
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: workflow_name.yml
+          workflow_conclusion: success
+          pr: ${{github.event.pull_request.number}}
+          commit: ${{github.event.pull_request.head.sha}}
           name: 'ios-template-release-Arm64'
 
       - name: Download artifact windows-template-release64
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: workflow_name.yml
+          workflow_conclusion: success
+          pr: ${{github.event.pull_request.number}}
+          commit: ${{github.event.pull_request.head.sha}}
           name: 'windows-template-release64'
 
       - name: Download artifact windows-template-release86
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: workflow_name.yml
+          workflow_conclusion: success
+          pr: ${{github.event.pull_request.number}}
+          commit: ${{github.event.pull_request.head.sha}}
           name: 'windows-template-release86'
 
       - name: Download artifact windows-template-release86
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: workflow_name.yml
+          workflow_conclusion: success
+          pr: ${{github.event.pull_request.number}}
+          commit: ${{github.event.pull_request.head.sha}}
           name: 'linux-template-release64'
 
       - name: Download artifact android-template-release
-        uses: actions/download-artifact@v2
+        uses: dawidd6/action-download-artifact@v2
         with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          workflow: workflow_name.yml
+          workflow_conclusion: success
+          pr: ${{github.event.pull_request.number}}
+          commit: ${{github.event.pull_request.head.sha}}
           name: 'android-template-release'
 
       - name: Setup Godot build cache
