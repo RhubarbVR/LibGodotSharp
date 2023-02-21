@@ -25,7 +25,7 @@ jobs:
             cache-name: linux-template-release64
             target: template_release
             sconsflags: library_type=shared_library arch=x86_64
-            bin: "./bin/*"
+            bin: "godot/bin/*"
             arch32: false
             artifact: true
             platform: linuxbsd

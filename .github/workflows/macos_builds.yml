@@ -25,7 +25,7 @@ jobs:
             cache-name: macos-template-release64
             target: template_release
             sconsflags: library_type=shared_library arch=x86_64
-            bin: "./bin/*"
+            bin: "godot/bin/*"
             artifact: true
             platform: macos
             
@@ -33,7 +33,7 @@ jobs:
             cache-name: macos-template-release Arm64
             target: template_release
             sconsflags: library_type=shared_library arch=arm64
-            bin: "./bin/*"
+            bin: "godot/bin/*"
             artifact: true
             platform: macos
 
@@ -41,7 +41,7 @@ jobs:
             cache-name: ios-template-release Arm64
             target: template_release
             sconsflags: library_type=shared_library arch=arm64
-            bin: "./bin/*"
+            bin: "godot/bin/*"
             artifact: true
             platform: ios
 
