@@ -65,3 +65,4 @@ jobs:
         if: ${{ matrix.artifact }}
         with:
           name: ${{ matrix.cache-name }}
+          path: ${{ matrix.bin }}

@@ -29,15 +29,6 @@ jobs:
             arch32: false
             artifact: true
             platform: linuxbsd
-            
-          - name: Linux Libgodot X32
-            cache-name: linux-template-release32
-            target: template_release
-            sconsflags: library_type=shared_library arch=x86 use_llvm=yes
-            bin: "./bin/libgodot.linuxbsd.template_release.x86.so"
-            arch32: true
-            artifact: true
-            platform: linuxbsd
 
     steps:
       - uses: actions/checkout@v3
@@ -45,12 +36,6 @@ jobs:
       - name: Linux dependencies for gold linker
         run: |
           sudo apt-get install -qq binutils
-          
-      - name: Linux dependencies for 32bit
-        if: ${{ matrix.arch32 }}
-        run: |
-          sudo apt-get install build-essential scons pkg-config libx11-dev libxcursor-dev libxinerama-dev \
-            libgl1-mesa-dev libglu-dev libasound2-dev libpulse-dev libudev-dev libxi-dev libxrandr-dev
           
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
@@ -71,10 +56,10 @@ jobs:
           platform: ${{ matrix.platform }}
           target: ${{ matrix.target }}
           tests: false
-        continue-on-error: ${{ matrix.arch32 }}
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
         if: ${{ matrix.artifact }}
         with:
           name: ${{ matrix.cache-name }}
+          path: ${{ matrix.bin }}
