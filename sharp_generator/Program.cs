@@ -28,6 +28,10 @@ namespace SharpGenerator
             var startingDir = GodotRootDir;
             if (!File.Exists(Path.Combine(GodotRootDir, "SConstruct")))
             {
+                GodotRootDir = Path.Combine(startingDir, "godot");
+            }
+            if (!File.Exists(Path.Combine(GodotRootDir, "SConstruct")))
+            {
                 GodotRootDir = Path.Combine(startingDir, "..", "godot-lib");
             }
             if (!File.Exists(Path.Combine(GodotRootDir, "SConstruct")))
@@ -156,6 +160,9 @@ namespace SharpGenerator
             var api = Api.Create(pathToGenJson);
             var convert = new Convert(api, ginDir, docs, configName);
             convert.Emit();
+
+            //Copy all platform files
+
         }
     }
 }

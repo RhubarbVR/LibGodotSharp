@@ -30,7 +30,7 @@ jobs:
             platform: macos
             
           - name: Macos Arm 64
-            cache-name: macos-template-release Arm64
+            cache-name: macos-template-release-Arm64
             target: template_release
             sconsflags: library_type=shared_library arch=arm64
             bin: "godot/bin/*"
@@ -38,7 +38,7 @@ jobs:
             platform: macos
 
           - name: IOS Arm 64
-            cache-name: ios-template-release Arm64
+            cache-name: ios-template-release-Arm64
             target: template_release
             sconsflags: library_type=shared_library arch=arm64
             bin: "godot/bin/*"

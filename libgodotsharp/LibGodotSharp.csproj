@@ -13,7 +13,9 @@
 		<Description>This is Godot as a .net library</Description>
 		<Company>RhubarbVR</Company>
 		<Authors>Faolan</Authors>
-		<AssemblyVersion>4.0.0.1</AssemblyVersion>
+		<ContainerImageTag Condition="'$(BUILD_VERSION)' == ''">latest</ContainerImageTag>
+		<AssemblyVersion Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</AssemblyVersion>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />

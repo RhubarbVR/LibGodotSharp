@@ -10,12 +10,22 @@
 		<Description>This is all files for windows, macos and linux for LibGodotSharp</Description>
 		<Company>RhubarbVR</Company>
 		<Authors>Faolan</Authors>
-		<AssemblyVersion>4.0.0.1</AssemblyVersion>
+		<ContainerImageTag Condition="'$(BUILD_VERSION)' == ''">latest</ContainerImageTag>
+		<AssemblyVersion Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</AssemblyVersion>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Update="runtimes\**" Pack="true" PackagePath="runtimes" />
 		<PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.0" />
+		<None Include="..\Assets\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
 	</ItemGroup>
 
 </Project>

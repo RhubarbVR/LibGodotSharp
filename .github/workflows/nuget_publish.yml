@@ -1,0 +1,150 @@
+name: Publish NuGet Package
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Wait for Android Build to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Android Build'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+      
+      - name: Wait for Windows Libgodot X64 to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Windows Libgodot X64'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+      
+      - name: Wait for Windows Libgodot X86 to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Windows Libgodot X86'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+          
+      - name: Wait for Linux Libgodot X64 to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Linux Libgodot X64'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+          
+      - name: Wait for Macos X64 to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Macos X64'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10
+      
+      - name: Wait for Macos Arm 64 to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'Macos Arm 64'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10      
+      
+      - name: Wait for IOS Arm 64 to succeed
+        uses: lewagon/wait-on-check-action@v1.3.1
+        with:
+          ref: ${{ github.ref }}
+          check-name: 'IOS Arm 64'
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          wait-interval: 10          
+
+      - name: Download artifact macos-template-release64
+        uses: actions/download-artifact@v2
+        with:
+          name: 'macos-template-release64'
+          
+      - name: Download artifact macos-template-release-Arm64
+        uses: actions/download-artifact@v2
+        with:
+          name: 'macos-template-release-Arm64'
+
+      - name: Download artifact ios-template-release-Arm64
+        uses: actions/download-artifact@v2
+        with:
+          name: 'ios-template-release-Arm64'
+
+      - name: Download artifact windows-template-release64
+        uses: actions/download-artifact@v2
+        with:
+          name: 'windows-template-release64'
+
+      - name: Download artifact windows-template-release86
+        uses: actions/download-artifact@v2
+        with:
+          name: 'windows-template-release86'
+
+      - name: Download artifact windows-template-release86
+        uses: actions/download-artifact@v2
+        with:
+          name: 'linux-template-release64'
+
+      - name: Download artifact android-template-release
+        uses: actions/download-artifact@v2
+        with:
+          name: 'android-template-release'
+
+      - name: Setup Godot build cache
+        uses: ./.github/actions/godot-cache
+        with:
+          cache-name: 'windows-64-editor'
+        continue-on-error: true
+
+      - name: Setup python and scons
+        uses: ./.github/actions/godot-deps
+
+      - name: Setup MSVC problem matcher
+        uses: ammaraskar/msvc-problem-matcher@master
+
+      - name: Run Generator
+        run: dotnet run --project sharp_generator/SharpGenerator.csproj
+
+      - name: Setting up build version
+        run: |
+          $version = "4.0-rc2 {0:#}" -f $($Env:GITHUB_RUN_NUMBER)
+          echo "BUILD_VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Build the NuGet package LibGodotSharp
+        run: dotnet build libgodotsharp/LibGodotSharp.csproj --configuration Release --output .\Package
+      
+      - name: Build the NuGet package LibGodotSharpAndroid
+        run: dotnet build LibGodotSharpAndroid/LibGodotSharpAndroid.csproj --configuration Release --output .\Package
+        
+      - name: Build the NuGet package LibGodotSharpDesktop
+        run: dotnet build LibGodotSharpDesktop/LibGodotSharpDesktop.csproj --configuration Release --output .\Package
+
+      - name: DIR
+        run: dir
+
+      - name: Upload artifact
+        uses: ./.github/actions/upload-artifact
+        with:
+          name: 'NuGet packages'
+          path: '**/*.nupkg'
