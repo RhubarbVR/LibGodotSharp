@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/RhubarbVR/LibGodotSharp</PackageProjectUrl>
+		<Title>LibGodotSharp.Desktop</Title>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Description>This is all files for windows, macos and linux for LibGodotSharp</Description>
+		<Company>RhubarbVR</Company>
+		<Authors>Faolan</Authors>
+		<AssemblyVersion>4.0.0.1</AssemblyVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Update="runtimes\**" Pack="true" PackagePath="runtimes" />
+		<PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.0" />
+	</ItemGroup>
+
+</Project>

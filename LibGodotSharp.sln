@@ -11,9 +11,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibGodotSharpAndroid", "Lib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestAndroid", "TestAndroid\TestAndroid.csproj", "{4905CE14-C5AC-4924-B664-5B82ACAACB2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibGodotSharp", "TestLibGodotSharp\TestLibGodotSharp.csproj", "{55ACC7DA-C874-407C-A608-70D7C765683A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestLibGodotSharp", "TestLibGodotSharp\TestLibGodotSharp.csproj", "{55ACC7DA-C874-407C-A608-70D7C765683A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{23664666-0EA9-4AED-8297-AEAE43C02C91}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsoleApp", "TestConsoleApp\TestConsoleApp.csproj", "{23664666-0EA9-4AED-8297-AEAE43C02C91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibGodotSharpDesktop", "LibGodotSharpDesktop\LibGodotSharpDesktop.csproj", "{4DB88310-8E50-43AC-A548-6FAF9D4267E2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{1EBEE447-EDAD-4A2B-AFAA-35F48A08C8E7}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +54,10 @@ Global
 		{23664666-0EA9-4AED-8297-AEAE43C02C91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23664666-0EA9-4AED-8297-AEAE43C02C91}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23664666-0EA9-4AED-8297-AEAE43C02C91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB88310-8E50-43AC-A548-6FAF9D4267E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB88310-8E50-43AC-A548-6FAF9D4267E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB88310-8E50-43AC-A548-6FAF9D4267E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB88310-8E50-43AC-A548-6FAF9D4267E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

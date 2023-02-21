@@ -1,14 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net7.0-android;net6.0-android</TargetFrameworks>
-    <SupportedOSPlatformVersion>1</SupportedOSPlatformVersion>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="Xamarin.AndroidX.Activity" Version="1.6.1.1" />
-    <PackageReference Include="Xamarin.AndroidX.Annotation" Version="1.5.0.2" />
-    <PackageReference Include="Xamarin.AndroidX.Core" Version="1.9.0.2" />
-    <PackageReference Include="Xamarin.AndroidX.Fragment" Version="1.5.5.1" />
-  </ItemGroup>
+	<PropertyGroup>
+		<TargetFrameworks>net7.0-android;net6.0-android</TargetFrameworks>
+		<SupportedOSPlatformVersion>1</SupportedOSPlatformVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageProjectUrl>https://github.com/RhubarbVR/LibGodotSharp</PackageProjectUrl>
+		<Title>LibGodotSharp.Android</Title>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Description>This is the android native files for LibGodotSharp</Description>
+		<Company>RhubarbVR</Company>
+		<Authors>Faolan</Authors>
+		<AssemblyVersion>4.0.0.1</AssemblyVersion>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Xamarin.AndroidX.Activity" Version="1.6.1.1" />
+		<PackageReference Include="Xamarin.AndroidX.Annotation" Version="1.5.0.2" />
+		<PackageReference Include="Xamarin.AndroidX.Core" Version="1.9.0.2" />
+		<PackageReference Include="Xamarin.AndroidX.Fragment" Version="1.5.5.1" />
+		<None Include="..\Assets\icon.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 </Project>

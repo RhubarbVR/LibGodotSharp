@@ -23,7 +23,7 @@ jobs:
         include:
           - name: Android Build
             cache-name: android-template-release
-            bin: "./platform/android/java/lib/build/outputs/aar/godot-lib.template_release.aar"
+            bin: "./platform/android/java/lib/build/outputs/aar/*"
             artifact: true
 
     steps:

@@ -25,7 +25,7 @@ jobs:
             cache-name: windows-template-release64
             target: template_release
             sconsflags: library_type=shared_library arch=x86_64
-            bin: "./bin/godot.windows.template_release.x86_64.dll"
+            bin: "./bin/*"
             artifact: true
             platform: windows
             
@@ -33,7 +33,7 @@ jobs:
             cache-name: windows-template-release86
             target: template_release
             sconsflags: library_type=shared_library arch=x86
-            bin: "./bin/godot.windows.template_release.x86.dll"
+            bin: "./bin/*"
             artifact: true
             platform: windows
 
