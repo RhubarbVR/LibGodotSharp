@@ -75,7 +75,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: workflow_name.yml
+          workflow: macos_builds.yml
           workflow_conclusion: success
           pr: ${{github.event.pull_request.number}}
           commit: ${{github.event.pull_request.head.sha}}
@@ -85,7 +85,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: workflow_name.yml
+          workflow: macos_builds.yml
           workflow_conclusion: success
           pr: ${{github.event.pull_request.number}}
           commit: ${{github.event.pull_request.head.sha}}
@@ -95,7 +95,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: workflow_name.yml
+          workflow: macos_builds.yml
           workflow_conclusion: success
           pr: ${{github.event.pull_request.number}}
           commit: ${{github.event.pull_request.head.sha}}
@@ -105,7 +105,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: workflow_name.yml
+          workflow: windows_builds.yml
           workflow_conclusion: success
           pr: ${{github.event.pull_request.number}}
           commit: ${{github.event.pull_request.head.sha}}
@@ -115,17 +115,17 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: workflow_name.yml
+          workflow: windows_builds.yml
           workflow_conclusion: success
           pr: ${{github.event.pull_request.number}}
           commit: ${{github.event.pull_request.head.sha}}
           name: 'windows-template-release86'
 
-      - name: Download artifact windows-template-release86
+      - name: Download artifact linux-template-release64
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: workflow_name.yml
+          workflow: linux_builds.yml
           workflow_conclusion: success
           pr: ${{github.event.pull_request.number}}
           commit: ${{github.event.pull_request.head.sha}}
@@ -135,7 +135,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
-          workflow: workflow_name.yml
+          workflow: android_builds.yml
           workflow_conclusion: success
           pr: ${{github.event.pull_request.number}}
           commit: ${{github.event.pull_request.head.sha}}
