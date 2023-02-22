@@ -17,7 +17,7 @@ public static class Fixer {
                     var amount = api.classes.Where(x => x.name == className).First().enums.Where(x => x.name == enumName).Count();
                     if (amount == 0)
                     {
-                        Console.WriteLine($"ENUM {name} not found");
+                        Program.Warn($"ENUM {name} not found");
                         return "long";
                     }
                 }

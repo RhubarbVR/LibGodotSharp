@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -52,6 +53,11 @@ namespace SharpGenerator
                 throw new Exception("Failed to find lib godot root");
             }
             Console.WriteLine($"Godot Root Dir:{GodotRootDir}");
+            if (Process.GetCurrentProcess().Threads.Count <= 4)
+            {
+                Warn("Can not run scons auto need to run  scons library_type=shared_library");
+                skipScons = true;
+            }
             var path = Path.Combine(GodotRootDir, "bin");
             if (!skipScons)
             {
@@ -176,7 +182,7 @@ namespace SharpGenerator
         {
             if (!File.Exists(sourceFilePath))
             {
-                Console.WriteLine($"Did not find {sourceFilePath}");
+                Warn($"Did not find {sourceFilePath}");
                 return;
             }
             // Ensure the directory exists

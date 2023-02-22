@@ -15,6 +15,31 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 7.0.x
+          
+      - name: Setup Godot build cache
+        uses: ./.github/actions/godot-cache
+        with:
+          cache-name: 'windows-64-editor'
+        continue-on-error: true
+
+      - name: Setup python and scons
+        uses: ./.github/actions/godot-deps
+
+      - name: Setup MSVC problem matcher
+        uses: ammaraskar/msvc-problem-matcher@master
+        
+      - name: Compilation
+        uses: ./.github/actions/godot-builds
+        with:
+          sconsflags: ${{ env.SCONSFLAGS }} library_type=shared_library
+          platform: windows
+          target: editor
+          tests: false        
+        
       - name: Wait for Android Build to succeed
         uses: lewagon/wait-on-check-action@v1.3.1
         with:
@@ -143,18 +168,6 @@ jobs:
       
       - name: DIR
         run: dir
-        
-      - name: Setup Godot build cache
-        uses: ./.github/actions/godot-cache
-        with:
-          cache-name: 'windows-64-editor'
-        continue-on-error: true
-
-      - name: Setup python and scons
-        uses: ./.github/actions/godot-deps
-
-      - name: Setup MSVC problem matcher
-        uses: ammaraskar/msvc-problem-matcher@master
 
       - name: Run Generator
         run: dotnet run --project sharp_generator/SharpGenerator.csproj
@@ -163,11 +176,6 @@ jobs:
         run: |
           $version = "4.0-rc2 {0:#}" -f $($Env:GITHUB_RUN_NUMBER)
           echo "BUILD_VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
-
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: 7.0.x
 
       - name: Build the NuGet package LibGodotSharp
         run: dotnet build libgodotsharp/LibGodotSharp.csproj --configuration Release --output .\Package
