@@ -20,6 +20,7 @@ namespace SharpGenerator
 
         static void Main(string[] args)
         {
+            Console.WriteLine($"Working Dir {Directory.GetCurrentDirectory()}");
             GodotRootDir = Directory.GetCurrentDirectory();
             if (args.Length >= 1)
             {
@@ -63,30 +64,30 @@ namespace SharpGenerator
             {
                 path = RuntimeInformation.ProcessArchitecture switch
                 {
-                    Architecture.X64 => Path.Combine(path, $"godot.windows.editor.dev.x86_64.dll"),
-                    Architecture.Arm64 => Path.Combine(path, $"godot.windows.editor.dev.arm64.dll"),
-                    Architecture.Arm => Path.Combine(path, $"godot.windows.editor.dev.arm32.dll"),
-                    _ => Path.Combine(path, $"godot.windows.editor.dev.x86_32.dll"),
+                    Architecture.X64 => Path.Combine(path, $"godot.windows.editor.x86_64.dll"),
+                    Architecture.Arm64 => Path.Combine(path, $"godot.windows.editor.arm64.dll"),
+                    Architecture.Arm => Path.Combine(path, $"godot.windows.editor.arm32.dll"),
+                    _ => Path.Combine(path, $"godot.windows.editor.x86_32.dll"),
                 };
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 path = RuntimeInformation.ProcessArchitecture switch
                 {
-                    Architecture.X64 => Path.Combine(path, $"godot.macos.editor.dev.x86_64.dylib"),
-                    Architecture.Arm64 => Path.Combine(path, $"godot.macos.editor.dev.arm64.dylib"),
-                    Architecture.Arm => Path.Combine(path, $"godot.macos.editor.dev.arm32.dylib"),
-                    _ => Path.Combine(path, $"godot.macos.editor.dev.x86_32.dylib"),
+                    Architecture.X64 => Path.Combine(path, $"godot.macos.editor.x86_64.dylib"),
+                    Architecture.Arm64 => Path.Combine(path, $"godot.macos.editor.arm64.dylib"),
+                    Architecture.Arm => Path.Combine(path, $"godot.macos.editor.arm32.dylib"),
+                    _ => Path.Combine(path, $"godot.macos.editor.x86_32.dylib"),
                 };
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 path = RuntimeInformation.ProcessArchitecture switch
                 {
-                    Architecture.X64 => Path.Combine(path, $"godot.linuxbsd.editor.dev.x86_64.so"),
-                    Architecture.Arm64 => Path.Combine(path, $"godot.linuxbsd.editor.dev.arm64.so"),
-                    Architecture.Arm => Path.Combine(path, $"godot.linuxbsd.editor.dev.arm32.so"),
-                    _ => Path.Combine(path, $"godot.linuxbsd.editor.dev.x86_32.so"),
+                    Architecture.X64 => Path.Combine(path, $"godot.linuxbsd.editor.x86_64.so"),
+                    Architecture.Arm64 => Path.Combine(path, $"godot.linuxbsd.editor.arm64.so"),
+                    Architecture.Arm => Path.Combine(path, $"godot.linuxbsd.editor.arm32.so"),
+                    _ => Path.Combine(path, $"godot.linuxbsd.editor.x86_32.so"),
                 };
             }
             if (!File.Exists(path))
@@ -118,7 +119,7 @@ namespace SharpGenerator
                 {
                     throw new Exception("Failed to laod godot");
                 }
-                if (godot_main(2, new string[] { "libgodot", "--dump-extension-api" ,"-v" }) != 0)
+                if (godot_main(2, new string[] { "libgodot", "--dump-extension-api", "-v" }) != 0)
                 {
                     throw new Exception("Godot had error");
                 }
@@ -163,6 +164,30 @@ namespace SharpGenerator
 
             //Copy all platform files
 
+            CopyFileWithDirectory("godot-lib.template_release.aar", "./LibGodotSharpAndroid/godot-lib.template_release.aar");
+            CopyFileWithDirectory("godot.windows.template_release.x86_32.dll", "./LibGodotSharpDesktop/runtimes/win-x86/native/libgodot.dll");
+            CopyFileWithDirectory("godot.windows.template_release.x86_64.dll", "./LibGodotSharpDesktop/runtimes/win-x64/native/libgodot.dll");
+            CopyFileWithDirectory("libgodot.macos.template_release.arm64.dylib", "./LibGodotSharpDesktop/runtimes/osx-arm64/native/libgodot.dylib");
+            CopyFileWithDirectory("libgodot.macos.template_release.x86_64.dylib", "./LibGodotSharpDesktop/runtimes/osx-x64/native/libgodot.dylib");
+            CopyFileWithDirectory("libgodot.linuxbsd.template_release.x86_64.so", "./LibGodotSharpDesktop/runtimes/linux-x64/native/libgodot.so");
+        }
+
+        public static void CopyFileWithDirectory(string sourceFilePath, string destFilePath)
+        {
+            if (!File.Exists(sourceFilePath))
+            {
+                Console.WriteLine($"Did not find {sourceFilePath}");
+                return;
+            }
+            // Ensure the directory exists
+            string destDirectory = Path.GetDirectoryName(destFilePath);
+            if (!Directory.Exists(destDirectory))
+            {
+                Directory.CreateDirectory(destDirectory);
+            }
+
+            // Copy the file
+            File.Copy(sourceFilePath, destFilePath, true);
         }
     }
 }

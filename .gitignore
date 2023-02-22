@@ -355,3 +355,4 @@ LibGodotSharpAndroid/godot-lib.template_debug.aar
 *.dll
 *.dylib
 *.so
+LibGodotSharpAndroid/godot-lib.template_release.aar

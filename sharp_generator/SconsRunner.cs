@@ -24,17 +24,14 @@ namespace SharpGenerator
 			var psi = new ProcessStartInfo
 			{
 				FileName = shellName,
-				Arguments = argsPrepend + "scons library_type=shared_library debug_symbols=true dev_build=true ",
-				RedirectStandardOutput = true,
+				Arguments = argsPrepend + "scons library_type=shared_library",
 				WorkingDirectory = GodotRootDir
 			};
 			using var process = Process.Start(psi);
-			while (!process.StandardOutput.EndOfStream)
-			{
-				Console.WriteLine(process.StandardOutput.ReadLine());
-			}
+			Console.WriteLine("Scons Running");
 			process.WaitForExit();
-			return process.ExitCode == 0;
+            Console.WriteLine("Scons Done");
+            return process.ExitCode == 0;
 		}
 	}
 }
