@@ -4,10 +4,25 @@ using System;
 namespace SharpGenerator;
 public static class Fixer {
 
-	public static string Type(string name) {
+	public static string Type(string name, Api api) {
 		if (name.StartsWith("enum::")) {
 			name = name[6..];
-		}
+			if (name.Contains('.'))
+			{
+                var className = name[..name.IndexOf('.')];
+                var enumName = name[(name.IndexOf('.') + 1)..];
+                bool isBuiletinClass = api.builtinClasses.Where(x => x.name == className).Cast<Api.BuiltinClass?>().FirstOrDefault() is not null;
+                if (className != "Variant" && !isBuiletinClass)
+				{
+                    var amount = api.classes.Where(x => x.name == className).First().enums.Where(x => x.name == enumName).Count();
+                    if (amount == 0)
+                    {
+                        Console.WriteLine($"ENUM {name} not found");
+                        return "long";
+                    }
+                }
+			}
+        }
 		name = name.Replace("const ", "");
 		if (name.Contains("typedarray::")) {
 			return "Array";

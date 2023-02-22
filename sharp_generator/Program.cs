@@ -113,7 +113,7 @@ namespace SharpGenerator
                 {
                     throw new Exception($"Editor file copy failed from {path} to {copyfile}");
                 }
-                var GodotLibrary = NativeLibrary.Load(copyfile);
+                GodotLibrary = NativeLibrary.Load(copyfile);
                 if (GodotLibrary == IntPtr.Zero)
                 {
                     throw new Exception("Failed to laod godot");

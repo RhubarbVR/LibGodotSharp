@@ -105,7 +105,10 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: 'android-template-release'
-
+      
+      - name: DIR
+        run: dir
+        
       - name: Setup Godot build cache
         uses: ./.github/actions/godot-cache
         with:
@@ -139,9 +142,6 @@ jobs:
         
       - name: Build the NuGet package LibGodotSharpDesktop
         run: dotnet build LibGodotSharpDesktop/LibGodotSharpDesktop.csproj --configuration Release --output .\Package
-
-      - name: DIR
-        run: dir
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
