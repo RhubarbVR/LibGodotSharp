@@ -1,17 +1,21 @@
 name: Publish NuGet Package
+on: [push, pull_request]
 
-on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
+env:
+  # Only used for the cache key. Increment version to force clean build.
+  GODOT_BASE_BRANCH: master
+  SCONSFLAGS: verbose=yes warnings=extra werror=yes module_text_server_fb_enabled=yes
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
 
-permissions:
-  contents: read
+concurrency:
+  group: ci-${{github.actor}}-${{github.head_ref || github.run_number}}-${{github.ref}}-nugetpackages
+  cancel-in-progress: true
 
 jobs:
   build:
-    runs-on: windows-latest
-
+    runs-on: "windows-latest"
+    name: 'NuGet Package Build'
     steps:
       - uses: actions/checkout@v3
           
@@ -28,7 +32,7 @@ jobs:
         uses: ammaraskar/msvc-problem-matcher@master
         
       - name: Compilation
-        uses: ./.github/actions/godot-builds
+        uses: ./.github/actions/godot-build
         with:
           sconsflags: ${{ env.SCONSFLAGS }} library_type=shared_library
           platform: windows
