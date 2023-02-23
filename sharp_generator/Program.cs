@@ -31,6 +31,8 @@ namespace SharpGenerator
             if (!File.Exists(Path.Combine(GodotRootDir, "SConstruct")))
             {
                 GodotRootDir = Path.Combine(startingDir, "godot");
+                Warn("thinking it is running in github action so run scons library_type=shared_library");
+                skipScons = true;
             }
             if (!File.Exists(Path.Combine(GodotRootDir, "SConstruct")))
             {
@@ -53,11 +55,6 @@ namespace SharpGenerator
                 throw new Exception("Failed to find lib godot root");
             }
             Console.WriteLine($"Godot Root Dir:{GodotRootDir}");
-            if (Process.GetCurrentProcess().Threads.Count <= 4)
-            {
-                Warn("Can not run scons auto need to run  scons library_type=shared_library");
-                skipScons = true;
-            }
             var path = Path.Combine(GodotRootDir, "bin");
             if (!skipScons)
             {
