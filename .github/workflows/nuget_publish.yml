@@ -52,7 +52,7 @@ jobs:
         run: dotnet workload install maui --ignore-failed-sources
 
       - name: Restore Dependencies
-        run: dotnet restore src/MauiBeach/MauiBeach.csproj
+        run: dotnet restore
         
       - name: Wait for Android Build to succeed
         uses: lewagon/wait-on-check-action@v1.3.1
