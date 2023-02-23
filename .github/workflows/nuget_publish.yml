@@ -177,7 +177,7 @@ jobs:
 
       - name: Setting up build version
         run: |
-          $version = "4.0-rc2 {0:#}" -f $($Env:GITHUB_RUN_NUMBER)
+          $version = "4.0.{0:#}" -f $($Env:GITHUB_RUN_NUMBER)
           echo "BUILD_VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Build the NuGet package LibGodotSharp
