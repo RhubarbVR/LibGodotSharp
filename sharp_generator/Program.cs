@@ -122,7 +122,8 @@ namespace SharpGenerator
                 {
                     throw new Exception("Failed to laod godot");
                 }
-                if (godot_main(2, new string[] { "libgodot", "--dump-extension-api", "-v" }) != 0)
+                var custom_args = new string[] { "libgodot", "--dump-extension-api", "--verbose", "--headless", "" };
+                if (godot_main(custom_args.Length - 1, custom_args) != 0)
                 {
                     throw new Exception("Godot had error");
                 }
