@@ -192,13 +192,13 @@ jobs:
           echo "BUILD_VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Build the NuGet package LibGodotSharp
-        run: dotnet build libgodotsharp/LibGodotSharp.csproj --configuration Release --output .\Package
+        run: dotnet build libgodotsharp/LibGodotSharp.csproj --configuration Release --output .\Package\
       
       - name: Build the NuGet package LibGodotSharpAndroid
-        run: dotnet build LibGodotSharpAndroid/LibGodotSharpAndroid.csproj --configuration Release --output .\Package
+        run: dotnet build LibGodotSharpAndroid/LibGodotSharpAndroid.csproj --configuration Release --output .\Package\
         
       - name: Build the NuGet package LibGodotSharpDesktop
-        run: dotnet build LibGodotSharpDesktop/LibGodotSharpDesktop.csproj --configuration Release --output .\Package
+        run: dotnet build LibGodotSharpDesktop/LibGodotSharpDesktop.csproj --configuration Release --output .\Package\
 
       - name: Upload artifact
         uses: ./.github/actions/upload-artifact
