@@ -22,7 +22,7 @@
 
 	<ItemGroup>
 		<Content Pack="true" Include="LibGodotSharp.Desktop.targets" PackagePath="build\" />
-		<Content Pack="true" Include="runtimes\**" />
+		<Content Pack="true" Include="runtimes\**" PackagePath="runtimes\"/>
 		<PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.0" />
 		<None Include="..\Assets\icon.png">
 			<Pack>True</Pack>
