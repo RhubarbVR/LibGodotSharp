@@ -17,14 +17,20 @@
 		<PackageTags>OpenXR C# AR VR MR XR MixedReality HoloLens Rendering 3D Vulkan OpenGL Audio UI</PackageTags>
 		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 		<PackageId>LibGodotSharp.Desktop</PackageId>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Content Pack="true" Include="LibGodotSharp.Desktop.targets" PackagePath="build\" />
 		<Content Pack="true" Include="runtimes\**" />
 		<PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.0" />
 		<None Include="..\Assets\icon.png">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
 		</None>
 	</ItemGroup>
 
