@@ -3,7 +3,6 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageProjectUrl>https://github.com/RhubarbVR/LibGodotSharp</PackageProjectUrl>
 		<Title>LibGodotSharp.Desktop</Title>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -17,7 +16,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Update="runtimes\**" Pack="true" PackagePath="runtimes" />
+		<None Update="runtimes\**" Pack="true" PackagePath="" />
 		<PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.0" />
 		<None Include="..\Assets\icon.png">
 			<Pack>True</Pack>

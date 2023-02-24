@@ -6,7 +6,6 @@
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<LangVersion>11</LangVersion>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageProjectUrl>https://github.com/RhubarbVR/LibGodotSharp</PackageProjectUrl>
 		<Title>LibGodotSharp</Title>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>

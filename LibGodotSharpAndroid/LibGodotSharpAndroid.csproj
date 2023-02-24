@@ -5,7 +5,6 @@
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<PackageIcon>icon.png</PackageIcon>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageProjectUrl>https://github.com/RhubarbVR/LibGodotSharp</PackageProjectUrl>
 		<Title>LibGodotSharp.Android</Title>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
