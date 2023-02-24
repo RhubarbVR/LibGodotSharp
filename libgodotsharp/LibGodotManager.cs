@@ -87,6 +87,10 @@ namespace LibGodotSharp
         {
             var arch = RuntimeInformation.ProcessArchitecture.ToString().ToLower();
             string neededPlatfomFile = GetRuntimePath();
+            if (neededPlatfomFile is null)
+            {
+                return;
+            }
             var runtimesFolder = Path.Combine(Directory.GetCurrentDirectory(), "runtimes", neededPlatfomFile);
             if (!File.Exists(runtimesFolder))
             {

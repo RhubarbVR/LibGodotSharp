@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Target Name="LibGodotSharpLibraries" BeforeTargets="BeforeBuild" Condition="'$(OutputType)'!='Library' or ('$(TargetFrameworkIdentifier)'=='MonoAndroid' and '$(TargetPlatformIdentifier)'!='UAP') or ('$(TargetFrameworkIdentifier)'=='.NETCoreApp' and '$(TargetPlatformIdentifier)'=='Android')">
+		<Message Importance="high" Text="[LibGodotSharp NuGet] Copying native libraries into the project at $(BaseIntermediateOutputPath)lib"/>
+		<ItemGroup>
+			<SourceFolder Include="$(MSBuildThisFileDirectory)../runtimes/**/*.*" />
+		</ItemGroup>
+		<Copy
+			SourceFiles        = "@(SourceFolder)"
+			DestinationFolder  = "$(BaseIntermediateOutputPath)lib/%(RecursiveDir)"
+			SkipUnchangedFiles = "true"/>
+
+		<Copy
+			Condition          = "'$(TargetFrameworkIdentifier)'=='.NETCoreApp' and $(TargetFrameworkVersion.StartsWith('v2.'))"
+			SourceFiles        = "@(SourceFolder)"
+			DestinationFolder  = "$(OutputPath)runtimes/%(RecursiveDir)"
+			SkipUnchangedFiles = "true"/>
+
+		<Copy
+			Condition          = "'$(TargetFrameworkIdentifier)'=='.NETFramework'"
+			SourceFiles        = "$(MSBuildThisFileDirectory)../runtimes/win-x64/native/libgodot.dll"
+			DestinationFolder  = "$(OutputPath)"
+			SkipUnchangedFiles = "true"/>
+	</Target>
+</Project>

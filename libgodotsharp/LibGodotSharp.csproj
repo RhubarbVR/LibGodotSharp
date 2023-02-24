@@ -10,12 +10,16 @@
 		<Title>LibGodotSharp</Title>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Description>This is Godot as a .net library</Description>
+		<releaseNotes>Godot 4 rc2</releaseNotes>
 		<Company>RhubarbVR</Company>
 		<Authors>Faolan</Authors>
 		<ContainerImageTag Condition="'$(BUILD_VERSION)' == ''">latest</ContainerImageTag>
 		<AssemblyVersion Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</AssemblyVersion>
 		<Version Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Id>LibGodotSharp</Id>
+		<PackageTags>OpenXR C# AR VR MR XR MixedReality HoloLens Rendering 3D Vulkan OpenGL Audio UI Net Standard</PackageTags>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.0.1" PrivateAssets="all" />

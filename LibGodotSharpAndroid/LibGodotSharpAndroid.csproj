@@ -15,6 +15,9 @@
 		<AssemblyVersion Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</AssemblyVersion>
 		<Version Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Id>LibGodotSharp.Android</Id>
+		<PackageTags>OpenXR C# AR VR MR XR MixedReality HoloLens Rendering 3D Vulkan OpenGL Audio UI Android</PackageTags>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
 	</PropertyGroup>
 	<ItemGroup>
 		<PackageReference Include="Xamarin.AndroidX.Activity" Version="1.6.1.1" />

@@ -13,10 +13,14 @@
 		<AssemblyVersion Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</AssemblyVersion>
 		<Version Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Id>LibGodotSharp.Desktop</Id>
+		<PackageTags>OpenXR C# AR VR MR XR MixedReality HoloLens Rendering 3D Vulkan OpenGL Audio UI</PackageTags>
+		<EmbedUntrackedSources>true</EmbedUntrackedSources>
+		<PackageId>LibGodotSharp.Desktop</PackageId>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<None Update="runtimes\**" Pack="true" PackagePath="" />
+		<Content Pack="true" Include="runtimes\**" />
 		<PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.0" />
 		<None Include="..\Assets\icon.png">
 			<Pack>True</Pack>
