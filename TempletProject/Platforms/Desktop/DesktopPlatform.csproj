@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+		<ApplicationIcon>icon.ico</ApplicationIcon>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="icon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Content Include="icon.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\..\LibGodotSharpDesktop\LibGodotSharpDesktop.csproj" />
+		<ProjectReference Include="..\..\GodotApplication\GodotApplication.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<MauiIcon Include="icon.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Resource Include="icon.ico" />
+	</ItemGroup>
+
+</Project>

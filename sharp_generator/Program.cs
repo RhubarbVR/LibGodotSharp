@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace SharpGenerator
 {
@@ -9,6 +10,7 @@ namespace SharpGenerator
         public static IntPtr GodotLibrary;
         public static string GodotRootDir;
         public static bool skipScons = false;
+        public static string GithubBuildVersion = null;
         public static void Warn(string message)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
@@ -168,12 +170,70 @@ namespace SharpGenerator
 
             //Copy all platform files
 
+            GithubBuildVersion = Environment.GetEnvironmentVariable("BUILD_VERSION");
+            if (GithubBuildVersion is null)
+            {
+                return;
+            }
             CopyFileWithDirectory("godot-lib.template_release.aar", "./LibGodotSharpAndroid/godot-lib.template_release.aar");
             CopyFileWithDirectory("godot.windows.template_release.x86_32.dll", "./LibGodotSharpDesktop/runtimes/win-x86/native/libgodot.dll");
             CopyFileWithDirectory("godot.windows.template_release.x86_64.dll", "./LibGodotSharpDesktop/runtimes/win-x64/native/libgodot.dll");
             CopyFileWithDirectory("libgodot.macos.template_release.arm64.dylib", "./LibGodotSharpDesktop/runtimes/osx-arm64/native/libgodot.dylib");
             CopyFileWithDirectory("libgodot.macos.template_release.x86_64.dylib", "./LibGodotSharpDesktop/runtimes/osx-x64/native/libgodot.dylib");
             CopyFileWithDirectory("libgodot.linuxbsd.template_release.x86_64.so", "./LibGodotSharpDesktop/runtimes/linux-x64/native/libgodot.so");
+
+            // Setup templet project
+            var templetDir = Path.Combine(Directory.GetCurrentDirectory(), "TempletProject");
+
+            var removeOnBuild = @"Project(""{2150E333-8FDC-42A3-9474-1A3956D46DE8}"") = ""REMOVEONBUILD"", ""REMOVEONBUILD"", ""{2D13262A-4BF2-45B0-92CF-3203C4F46A95}""
+EndProject
+Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""LibGodotSharp"", ""..\libgodotsharp\LibGodotSharp.csproj"", ""{95BE9533-B6BA-415C-B548-B3A2C734196D}""
+EndProject
+Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""LibGodotSharpAndroid"", ""..\LibGodotSharpAndroid\LibGodotSharpAndroid.csproj"", ""{7258ECD1-63B8-4691-B055-7DE1DC7F5740}""
+EndProject
+Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""LibGodotSharpDesktop"", ""..\LibGodotSharpDesktop\LibGodotSharpDesktop.csproj"", ""{8D862275-156A-4379-BE02-8CDFA01DF2CA}""
+EndProject";
+            ReplaceTextInFile(Path.Combine(templetDir, "GodotApplication.sln"), removeOnBuild, null);
+            ReplaceTextInFile(Path.Combine(templetDir, "GodotApplication", "GodotApplication.csproj"), "<ProjectReference Include=\"..\\..\\libgodotsharp\\LibGodotSharp.csproj\" OutputItemType=\"Analyzer\" ReferenceOutputAssembly=\"true\" />", $"<PackageReference Include=\"LibGodotSharp\" Version=\"{GithubBuildVersion}\" />");
+            ReplaceTextInFile(Path.Combine(templetDir, "Platforms", "Desktop", "DesktopPlatform.csproj"), "<ProjectReference Include=\"..\\..\\..\\LibGodotSharpDesktop\\LibGodotSharpDesktop.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Desktop\" Version=\"{GithubBuildVersion}\" />");
+            ReplaceTextInFile(Path.Combine(templetDir, "Platforms", "Android", "AndroidPlatform.csproj"), "<ProjectReference Include=\"..\\..\\..\\LibGodotSharpAndroid\\LibGodotSharpAndroid.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Android\" Version=\"{GithubBuildVersion}\" />");
+
+            Console.WriteLine("Done setting up TempletProject");
+        }
+
+        /// <summary>
+        /// Determines a text file's encoding by analyzing its byte order mark (BOM).
+        /// Defaults to ASCII when detection of the text file's endianness fails.
+        /// </summary>
+        /// <param name="filename">The text file to analyze.</param>
+        /// <returns>The detected encoding.</returns>
+        public static Encoding GetEncoding(string filename)
+        {
+            // Read the BOM
+            var bom = new byte[4];
+            using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read))
+            {
+                file.Read(bom, 0, 4);
+                file.Close();
+            }
+
+            // Analyze the BOM
+            if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76) return Encoding.UTF7;
+            if (bom[0] == 0xef && bom[1] == 0xbb && bom[2] == 0xbf) return Encoding.UTF8;
+            if (bom[0] == 0xff && bom[1] == 0xfe && bom[2] == 0 && bom[3] == 0) return Encoding.UTF32; //UTF-32LE
+            if (bom[0] == 0xff && bom[1] == 0xfe) return Encoding.Unicode; //UTF-16LE
+            if (bom[0] == 0xfe && bom[1] == 0xff) return Encoding.BigEndianUnicode; //UTF-16BE
+            if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) return new UTF32Encoding(true, true);  //UTF-32BE
+
+            // We actually have no idea what the encoding is if we reach this point, so
+            // you may wish to return null instead of defaulting to ASCII
+            return Encoding.ASCII;
+        }
+
+        public static void ReplaceTextInFile(string file, string search, string replace)
+        {
+            var encode = GetEncoding(file);
+            File.WriteAllText(file, File.ReadAllText(file).Replace(search, replace), encode);
         }
 
         public static void CopyFileWithDirectory(string sourceFilePath, string destFilePath)

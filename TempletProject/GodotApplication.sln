@@ -1,0 +1,68 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AndroidPlatform", "Platforms\Android\AndroidPlatform.csproj", "{7B9F7B6B-7673-40DB-811B-B68B1382105E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Platforms", "Platforms", "{664C5C3A-9AEB-4EE2-B2E5-9660B1AB9837}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DesktopPlatform", "Platforms\Desktop\DesktopPlatform.csproj", "{D149EEF7-5D90-4AF8-914C-904DA3296C6D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GodotApplication", "GodotApplication\GodotApplication.csproj", "{11BB66D8-BC64-4E4E-B9D9-6AEFF4907715}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "REMOVEONBUILD", "REMOVEONBUILD", "{2D13262A-4BF2-45B0-92CF-3203C4F46A95}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibGodotSharp", "..\libgodotsharp\LibGodotSharp.csproj", "{95BE9533-B6BA-415C-B548-B3A2C734196D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibGodotSharpAndroid", "..\LibGodotSharpAndroid\LibGodotSharpAndroid.csproj", "{7258ECD1-63B8-4691-B055-7DE1DC7F5740}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LibGodotSharpDesktop", "..\LibGodotSharpDesktop\LibGodotSharpDesktop.csproj", "{8D862275-156A-4379-BE02-8CDFA01DF2CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7B9F7B6B-7673-40DB-811B-B68B1382105E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B9F7B6B-7673-40DB-811B-B68B1382105E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B9F7B6B-7673-40DB-811B-B68B1382105E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{7B9F7B6B-7673-40DB-811B-B68B1382105E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B9F7B6B-7673-40DB-811B-B68B1382105E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B9F7B6B-7673-40DB-811B-B68B1382105E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{D149EEF7-5D90-4AF8-914C-904DA3296C6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D149EEF7-5D90-4AF8-914C-904DA3296C6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D149EEF7-5D90-4AF8-914C-904DA3296C6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D149EEF7-5D90-4AF8-914C-904DA3296C6D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11BB66D8-BC64-4E4E-B9D9-6AEFF4907715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11BB66D8-BC64-4E4E-B9D9-6AEFF4907715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11BB66D8-BC64-4E4E-B9D9-6AEFF4907715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11BB66D8-BC64-4E4E-B9D9-6AEFF4907715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95BE9533-B6BA-415C-B548-B3A2C734196D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95BE9533-B6BA-415C-B548-B3A2C734196D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95BE9533-B6BA-415C-B548-B3A2C734196D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95BE9533-B6BA-415C-B548-B3A2C734196D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7258ECD1-63B8-4691-B055-7DE1DC7F5740}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7258ECD1-63B8-4691-B055-7DE1DC7F5740}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7258ECD1-63B8-4691-B055-7DE1DC7F5740}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7258ECD1-63B8-4691-B055-7DE1DC7F5740}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D862275-156A-4379-BE02-8CDFA01DF2CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D862275-156A-4379-BE02-8CDFA01DF2CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D862275-156A-4379-BE02-8CDFA01DF2CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D862275-156A-4379-BE02-8CDFA01DF2CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7B9F7B6B-7673-40DB-811B-B68B1382105E} = {664C5C3A-9AEB-4EE2-B2E5-9660B1AB9837}
+		{D149EEF7-5D90-4AF8-914C-904DA3296C6D} = {664C5C3A-9AEB-4EE2-B2E5-9660B1AB9837}
+		{95BE9533-B6BA-415C-B548-B3A2C734196D} = {2D13262A-4BF2-45B0-92CF-3203C4F46A95}
+		{7258ECD1-63B8-4691-B055-7DE1DC7F5740} = {2D13262A-4BF2-45B0-92CF-3203C4F46A95}
+		{8D862275-156A-4379-BE02-8CDFA01DF2CA} = {2D13262A-4BF2-45B0-92CF-3203C4F46A95}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B278F6BC-38EA-4F81-B71A-7A92485BD8BC}
+	EndGlobalSection
+EndGlobal
