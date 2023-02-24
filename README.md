@@ -16,6 +16,9 @@
 ## About The Project
 LibGodotSharps's core is built on the versatile Net Standard 2, which allows for seamless integration with either the Net Framework or Net Core/.Net, accommodating the preferences of all users.
 
+## Used by
+[RhubarbVR](https://github.com/RhubarbVR/RhubarbVR)
+
 ## Preview
 ![image](https://user-images.githubusercontent.com/46481567/218472227-820c0188-87f7-43be-8125-dc82c6f0c907.png)
 
