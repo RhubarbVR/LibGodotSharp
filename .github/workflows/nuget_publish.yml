@@ -186,7 +186,7 @@ jobs:
       
       - name: Setting up build version
         run: |
-          $version = "4.0.{0:#}" -f $(${{vars.LIB_GODOTSHARP_VERSION}})
+          $version = "4.0.{0:#}" -f $("${{vars.LIB_GODOTSHARP_VERSION}}")
           echo "BUILD_VERSION=$version" | Out-File -FilePath $Env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Run Generator
