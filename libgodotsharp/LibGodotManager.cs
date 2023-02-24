@@ -15,10 +15,10 @@ namespace LibGodotSharp
         public delegate bool GDentryPoint(GDExtensionInterface interface_, void* library, GDExtensionInitialization* expIntilzation);
 
         [DllImport("godot_android", EntryPoint = "libgodot_bind", CallingConvention = CallingConvention.StdCall)]
-        internal static extern void Android_libgodot_bind(IntPtr entryPoint, IntPtr sceneTreeLoad);
+        internal static extern void Android_libgodot_bind(void* entryPoint, void* sceneTreeLoad);
 
         [DllImport("libgodot", CallingConvention = CallingConvention.StdCall)]
-        internal static extern void libgodot_bind(IntPtr entryPoint, IntPtr sceneTreeLoad);
+        internal static extern void libgodot_bind(void* entryPoint, void* sceneTreeLoad);
 
         [DllImport("libgodot", CallingConvention = CallingConvention.StdCall)]
         internal static extern int godot_main(int amount, string[] args);
@@ -28,10 +28,29 @@ namespace LibGodotSharp
             _sceneTreeLoad(SceneTree.Construct(startup));
         }
 
-        private static void FallBackLoadPlatformLibrary()
+        private static void CheckIfLatestLibraryInRoot()
         {
-            var neededPlatfomFile = "Unknown";
-            var arch = RuntimeInformation.OSArchitecture.ToString().ToLower();
+            var targetPath = GetRuntimePath();
+            if (targetPath is null)
+            {
+                return;
+            }
+            var rootFile = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "libgodot" + Path.GetExtension(targetPath));
+            if (!File.Exists(rootFile))
+            {
+                return;
+            }
+            if (FileCompare(targetPath, rootFile))
+            {
+                return;
+            }
+            File.Delete(rootFile);
+        }
+
+        private static string GetRuntimePath()
+        {
+            var arch = RuntimeInformation.ProcessArchitecture.ToString().ToLower();
+            string neededPlatfomFile;
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 neededPlatfomFile = Path.Combine($"win-{arch}", "native", "libgodot.dll");
@@ -51,11 +70,31 @@ namespace LibGodotSharp
             var runtimesFolder = Path.Combine(Directory.GetCurrentDirectory(), "runtimes", neededPlatfomFile);
             if (!File.Exists(runtimesFolder))
             {
-                runtimesFolder = Path.Combine(Assembly.GetEntryAssembly().Location, "runtimes", neededPlatfomFile);
+                runtimesFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "runtimes", neededPlatfomFile);
             }
             if (!File.Exists(runtimesFolder))
             {
-                runtimesFolder = Path.Combine(Assembly.GetAssembly(typeof(LibGodotManager)).Location, "runtimes", neededPlatfomFile);
+                runtimesFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetAssembly(typeof(LibGodotManager)).Location), "runtimes", neededPlatfomFile);
+            }
+            if (!File.Exists(runtimesFolder))
+            {
+                runtimesFolder = null;
+            }
+            return runtimesFolder;
+        }
+
+        private static void FallBackLoadPlatformLibrary()
+        {
+            var arch = RuntimeInformation.ProcessArchitecture.ToString().ToLower();
+            string neededPlatfomFile = GetRuntimePath();
+            var runtimesFolder = Path.Combine(Directory.GetCurrentDirectory(), "runtimes", neededPlatfomFile);
+            if (!File.Exists(runtimesFolder))
+            {
+                runtimesFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "runtimes", neededPlatfomFile);
+            }
+            if (!File.Exists(runtimesFolder))
+            {
+                runtimesFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetAssembly(typeof(LibGodotManager)).Location), "runtimes", neededPlatfomFile);
             }
             if (!File.Exists(runtimesFolder))
             {
@@ -93,7 +132,7 @@ namespace LibGodotSharp
         private static void LazyLoadLibrary(string library)
         {
             var ex = Path.GetExtension(library);
-            File.Copy(library, Path.Combine(Assembly.GetEntryAssembly().Location, "libgodot" + ex), true);
+            File.Copy(library, Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "libgodot" + ex), true);
         }
 
         [DllImport("libdl", CharSet = CharSet.Unicode)]
@@ -137,21 +176,24 @@ namespace LibGodotSharp
                 throw new Exception("All ready bound into godot");
             }
             _sceneTreeLoad = sceneTreeLoad;
+            var entryPointPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(entryPoint);
+            var runStartUpPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate<SceneTreeLoadNative>(RunStartUp);
             if (AndroidTest.Check())
             {
-                Android_libgodot_bind(SaftyRapper.GetFunctionPointerForDelegate(entryPoint), SaftyRapper.GetFunctionPointerForDelegate<SceneTreeLoadNative>(RunStartUp));
+                Android_libgodot_bind(entryPointPointer, runStartUpPointer);
                 return 0;
             }
             else
             {
+                CheckIfLatestLibraryInRoot();
                 try
                 {
-                    libgodot_bind(SaftyRapper.GetFunctionPointerForDelegate(entryPoint), SaftyRapper.GetFunctionPointerForDelegate<SceneTreeLoadNative>(RunStartUp));
+                    libgodot_bind(entryPointPointer, runStartUpPointer);
                 }
                 catch (DllNotFoundException)
                 {
                     FallBackLoadPlatformLibrary();
-                    libgodot_bind(SaftyRapper.GetFunctionPointerForDelegate(entryPoint), SaftyRapper.GetFunctionPointerForDelegate<SceneTreeLoadNative>(RunStartUp));
+                    libgodot_bind(entryPointPointer, runStartUpPointer);
                 }
             }
             var argss = new List<string>(args);
@@ -161,6 +203,58 @@ namespace LibGodotSharp
                 argss.Add("--verbose");
             }
             return godot_main(argss.Count, argss.ToArray());
+        }
+
+
+        private static bool FileCompare(string file1, string file2)
+        {
+            int file1byte;
+            int file2byte;
+            FileStream fs1;
+            FileStream fs2;
+
+            // Determine if the same file was referenced two times.
+            if (file1 == file2)
+            {
+                // Return true to indicate that the files are the same.
+                return true;
+            }
+
+            // Open the two files.
+            fs1 = new FileStream(file1, FileMode.Open);
+            fs2 = new FileStream(file2, FileMode.Open);
+
+            // Check the file sizes. If they are not the same, the files
+            // are not the same.
+            if (fs1.Length != fs2.Length)
+            {
+                // Close the file
+                fs1.Close();
+                fs2.Close();
+
+                // Return false to indicate files are different
+                return false;
+            }
+
+            // Read and compare a byte from each file until either a
+            // non-matching set of bytes is found or until the end of
+            // file1 is reached.
+            do
+            {
+                // Read one byte from each file.
+                file1byte = fs1.ReadByte();
+                file2byte = fs2.ReadByte();
+            }
+            while ((file1byte == file2byte) && (file1byte != -1));
+
+            // Close the files.
+            fs1.Close();
+            fs2.Close();
+
+            // Return the success of the comparison. "file1byte" is
+            // equal to "file2byte" at this point only if the files are
+            // the same.
+            return ((file1byte - file2byte) == 0);
         }
 
     }

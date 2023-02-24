@@ -198,7 +198,40 @@ EndProject";
             ReplaceTextInFile(Path.Combine(templetDir, "Platforms", "Desktop", "DesktopPlatform.csproj"), "<ProjectReference Include=\"..\\..\\..\\LibGodotSharpDesktop\\LibGodotSharpDesktop.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Desktop\" Version=\"{GithubBuildVersion}\" />");
             ReplaceTextInFile(Path.Combine(templetDir, "Platforms", "Android", "AndroidPlatform.csproj"), "<ProjectReference Include=\"..\\..\\..\\LibGodotSharpAndroid\\LibGodotSharpAndroid.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Android\" Version=\"{GithubBuildVersion}\" />");
 
+
+            var net6Templet = Path.Combine(Directory.GetCurrentDirectory(), "TempletProjectNet6");
+            CopyFilesRecursively(templetDir, net6Templet);
+            ReplaceTextInFile(Path.Combine(net6Templet, "GodotApplication", "GodotApplication.csproj"), "net7.0", $"net6.0");
+            ReplaceTextInFile(Path.Combine(net6Templet, "Platforms", "Desktop", "DesktopPlatform.csproj"), "net7.0", $"net6.0");
+            ReplaceTextInFile(Path.Combine(net6Templet, "Platforms", "Android", "AndroidPlatform.csproj"), "net7.0", $"net6.0");
+
+            var removeOnBuildFrameWork = @"Project(""{2150E333-8FDC-42A3-9474-1A3956D46DE8}"") = ""REMOVEONBUILD"", ""REMOVEONBUILD"", ""{F7A1DD5C-B2BB-40FF-B106-1020AF5B7C6B}""
+EndProject
+Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""LibGodotSharp"", ""..\libgodotsharp\LibGodotSharp.csproj"", ""{C54E000A-C104-4888-9008-572BB716A79D}""
+EndProject
+Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""LibGodotSharpDesktop"", ""..\LibGodotSharpDesktop\LibGodotSharpDesktop.csproj"", ""{37A6D2F8-CBF7-4998-B375-926A09F20404}""
+EndProject";
+
+            var netframeworkTemplet = Path.Combine(Directory.GetCurrentDirectory(), "TempletProjectNetFramework");
+            ReplaceTextInFile(Path.Combine(netframeworkTemplet, "GodotApplication.sln"), removeOnBuildFrameWork, null);
+            ReplaceTextInFile(Path.Combine(netframeworkTemplet, "GodotApplication.csproj"), "<ProjectReference Include=\"..\\libgodotsharp\\LibGodotSharp.csproj\" OutputItemType=\"Analyzer\" ReferenceOutputAssembly=\"true\" />", $"<PackageReference Include=\"LibGodotSharp\" Version=\"{GithubBuildVersion}\" />");
+            ReplaceTextInFile(Path.Combine(netframeworkTemplet, "GodotApplication.csproj"), "<ProjectReference Include=\"..\\LibGodotSharpDesktop\\LibGodotSharpDesktop.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Desktop\" Version=\"{GithubBuildVersion}\" />");
+
+
             Console.WriteLine("Done setting up TempletProject");
+        }
+
+        private static void CopyFilesRecursively(string sourcePath, string targetPath)
+        {
+            foreach (string dirPath in Directory.GetDirectories(sourcePath, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourcePath, targetPath));
+            }
+
+            foreach (string newPath in Directory.GetFiles(sourcePath, "*.*", SearchOption.AllDirectories))
+            {
+                File.Copy(newPath, newPath.Replace(sourcePath, targetPath), true);
+            }
         }
 
         /// <summary>

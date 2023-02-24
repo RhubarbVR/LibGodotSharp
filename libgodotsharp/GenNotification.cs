@@ -18,7 +18,7 @@ namespace Generators
 			using System.Runtime.CompilerServices;
 			using System.Runtime.InteropServices;
 			using GDExtension;
-			namespace {{c.ContainingNamespace}};
+			namespace {{c.ContainingNamespace}} {
 			public unsafe partial class {{c.Name}} : {{c.BaseType.Name}} {
 			""";
 
@@ -72,6 +72,7 @@ namespace Generators
 					inst.{{notificationName}}(what);
 				}
 			}
+				}
 			""";
 
 			context.AddSource($"{c.Name}.notification.gen.cs", code);

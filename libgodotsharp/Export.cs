@@ -29,7 +29,7 @@ namespace Generators
 			using System.Runtime.InteropServices;
 			using GDExtension;
 			using static GDExtension.Native;
-			namespace {{c.ContainingNamespace}};
+			namespace {{c.ContainingNamespace}} {
 			public unsafe partial class {{c.Name}} : {{c.BaseType.Name}} {
 				static unsafe void RegisterExports() {
 			""";
@@ -66,7 +66,7 @@ namespace Generators
 			}
 			code += """
 				}
-			}
+			}}
 			""";
 			context.AddSource($"{c.Name}.export.gen.cs", code);
 		}

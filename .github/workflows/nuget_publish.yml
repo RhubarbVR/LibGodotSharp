@@ -18,6 +18,7 @@ concurrency:
 jobs:
   build:
     runs-on: "windows-latest"
+    environment: NugetBuildEnviroment
     name: 'NuGet Package Build'
     steps:
       - uses: actions/checkout@v3
@@ -206,9 +207,20 @@ jobs:
           name: 'NuGet packages'
           path: '**/*.nupkg'
           
-      
-      - name: Upload Templet Project artifact
+      - name: Upload Templet Project artifact Net7
         uses: ./.github/actions/upload-artifact
         with:
-          name: 'Templet Project'
+          name: 'Templet Project Net7'
           path: './TempletProject/'
+
+      - name: Upload Templet Project artifact Net6
+        uses: ./.github/actions/upload-artifact
+        with:
+          name: 'Templet Project Net6'
+          path: './TempletProjectNet6/'
+
+      - name: Upload Templet Project NetFramework artifact
+        uses: ./.github/actions/upload-artifact
+        with:
+          name: 'Templet Project NetFramework'
+          path: './TempletProjectNetFramework/'

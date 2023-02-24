@@ -45,7 +45,7 @@ namespace Generators
 			using GDExtension;
 			using System;
 			using static GDExtension.Native;
-			namespace {{c.ContainingNamespace}};
+			namespace {{c.ContainingNamespace}} {
 			public unsafe partial class {{c.Name}} : {{c.BaseType.Name}} {
 			#pragma warning disable CS8618
 				public static new StringName __godot_name;
@@ -97,6 +97,7 @@ namespace Generators
 					var instance = ({{c.Name}})instancePtr;
 					instance.handle.Free();
 				}
+			}
 			}
 			""";
 

@@ -24,7 +24,7 @@ namespace Generators
 			using System.Runtime.InteropServices;
 			using GDExtension;
 			using static GDExtension.Native;
-			namespace {{c.ContainingNamespace}};
+			namespace {{c.ContainingNamespace}} {
 			public unsafe partial class {{c.Name}} : {{c.BaseType.Name}} {
 				static unsafe void RegisterSignals() {
 			""";
@@ -69,6 +69,7 @@ namespace Generators
 				code += ");\n";
 			}
 			code += $$"""
+			}
 			}
 			""";
 			context.AddSource($"{c.Name}.Signal.gen.cs", code);
