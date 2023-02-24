@@ -12,6 +12,7 @@
 		<Authors>Faolan</Authors>
 		<ContainerImageTag Condition="'$(BUILD_VERSION)' == ''">latest</ContainerImageTag>
 		<AssemblyVersion Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</AssemblyVersion>
+		<Version Condition="'$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 	</PropertyGroup>
 
@@ -19,10 +20,6 @@
 		<None Update="runtimes\**" Pack="true" PackagePath="runtimes" />
 		<PackageReference Include="Microsoft.NETCore.Platforms" Version="7.0.0" />
 		<None Include="..\Assets\icon.png">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-		<None Include="..\README.md">
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
 		</None>
