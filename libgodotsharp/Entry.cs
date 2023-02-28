@@ -5,49 +5,33 @@ using Microsoft.CodeAnalysis;
 namespace Generators
 {
 
-	public static class Entry
-	{
+    public static class Entry
+    {
 
-		public static void Execute(GeneratorExecutionContext context, List<Register.Data> classes)
-		{
-			var registrations = "";
-			var editorRegistrations = "";
-			var unregistrations = "";
-			while (classes.Count > 0)
-			{
-				for (var i = 0; i < classes.Count; i++)
-				{
-					var b = classes[i].@base;
-					var valid = true;
-					foreach (var o in classes)
-					{
-						if (o.name == b)
-						{
-							valid = false;
-							break;
-						}
-					}
-					if (valid)
-					{
-						var n = classes[i];
-						switch (n.level)
-						{
-							case Register.Level.Scene:
-								registrations += $"{n.@namespace}.{n.name}.Register();\n\t\t\t";
-								break;
-							case Register.Level.Editor:
-								editorRegistrations += $"{n.@namespace}.{n.name}.Register();\n\t\t\t";
-								break;
-						}
-						unregistrations = $"GDExtensionMain.extensionInterface.classdb_unregister_extension_class(GDExtensionMain.library, {n.@namespace}.{n.name}.__godot_name._internal_pointer);\n\t\t\t" + unregistrations;
-						classes[i] = classes.Last();
-						classes.RemoveAt(classes.Count - 1);
-						break;
-					}
-				}
-			}
+        public static void Execute(GeneratorExecutionContext context, List<Register.Data> classes)
+        {
+            var registrations = "";
+            var editorRegistrations = "";
+            var unregistrations = "";
 
-			var source = $$"""
+            for (var i = 0; i < classes.Count; i++)
+            {
+                var n = classes[i];
+                switch (n.level)
+                {
+                    case Register.Level.Scene:
+                        registrations += $"{n.@namespace}.{n.name}.Register();\n\t\t\t";
+                        break;
+                    case Register.Level.Editor:
+                        editorRegistrations += $"{n.@namespace}.{n.name}.Register();\n\t\t\t";
+                        break;
+                }
+                unregistrations = $"GDExtensionMain.extensionInterface.classdb_unregister_extension_class(GDExtensionMain.library, {n.@namespace}.{n.name}.__godot_name._internal_pointer);\n\t\t\t" + unregistrations;
+                classes[i] = classes.Last();
+                classes.RemoveAt(classes.Count - 1);
+            }
+
+            var source = $$"""
 			using System;
 			using System.Runtime.CompilerServices;
 			using System.Runtime.InteropServices;
@@ -96,7 +80,7 @@ namespace Generators
 				}
 			}
 			""";
-			context.AddSource("ExtensionEntry.gen.cs", source);
-		}
-	}
+            context.AddSource("ExtensionEntry.gen.cs", source);
+        }
+    }
 }
