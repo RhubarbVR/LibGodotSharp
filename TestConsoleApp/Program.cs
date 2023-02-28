@@ -7,7 +7,7 @@ namespace TestConsoleApp
     {
         static unsafe int Main(string[] args)
         {
-            return LibGodotManager.RunGodot(Array.Empty<string>(), ExtensionEntry.EntryPoint, MainGodotGame.LoadScene, MainGodotGame.LoadProjectSettings, true);
+            return LibGodotManager.RunGodot(Array.Empty<string>(), TestLibGodotSharpExtensionEntry.EntryPoint, MainGodotGame.LoadScene, MainGodotGame.LoadProjectSettings, true);
         }
     }
 }

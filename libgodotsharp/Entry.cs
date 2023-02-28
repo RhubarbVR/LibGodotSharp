@@ -30,14 +30,14 @@ namespace Generators
                 classes[i] = classes.Last();
                 classes.RemoveAt(classes.Count - 1);
             }
-
+			var assimblyName = context.Compilation.AssemblyName ?? "NoName";
             var source = $$"""
 			using System;
 			using System.Runtime.CompilerServices;
 			using System.Runtime.InteropServices;
 			using GDExtension;
 			using static GDExtension.Native;
-			public static class ExtensionEntry {
+			public static class {{assimblyName}}ExtensionEntry {
 				public static unsafe bool EntryPoint(GDExtensionInterface @interface, void* library, GDExtensionInitialization* init) {
 					GDExtensionMain.extensionInterface = @interface;
 					GDExtensionMain.library = library;
@@ -79,6 +79,7 @@ namespace Generators
 					}
 				}
 			}
+			
 			""";
             context.AddSource("ExtensionEntry.gen.cs", source);
         }

@@ -237,7 +237,7 @@ namespace Generators
 
 		public static string TypeToVariantType(ITypeSymbol type)
 		{
-			return TypeToVariantType(type, Generators.GetSpecialBase(type));
+			return TypeToVariantType(type, LibGodotGenerators.GetSpecialBase(type));
 		}
 
 		public static string TypeToVariantType(ITypeSymbol type, SpecialBase sBase)
@@ -312,7 +312,7 @@ namespace Generators
 
 		public static string CreatePropertyInfo(ITypeSymbol type, string name, int tabs)
 		{
-			var sBase = Generators.GetSpecialBase(type);
+			var sBase = LibGodotGenerators.GetSpecialBase(type);
 
 			var t = new String('\t', tabs);
 

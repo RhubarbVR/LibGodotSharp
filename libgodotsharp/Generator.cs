@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace Generators
 {
 	[Generator]
-	public class Generators : ISourceGenerator
+	public class LibGodotGenerators : ISourceGenerator
 	{
 
 		public void Execute(GeneratorExecutionContext context)
