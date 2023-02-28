@@ -1,6 +1,7 @@
 using GDExtension;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using static GDExtension.Native;
 
@@ -9,23 +10,143 @@ namespace LibGodotSharp
     public static unsafe class LibGodotManager
     {
         public delegate void SceneTreeLoad(SceneTree scene);
+        public delegate void ProjectSettingsLoad(ProjectSettings settings);
+
+        [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+        public delegate void ProjectSettingsLoadNative(void* scene);
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate void SceneTreeLoadNative(void* scene);
         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
         public delegate bool GDentryPoint(GDExtensionInterface interface_, void* library, GDExtensionInitialization* expIntilzation);
 
         [DllImport("godot_android", EntryPoint = "libgodot_bind", CallingConvention = CallingConvention.StdCall)]
-        internal static extern void Android_libgodot_bind(void* entryPoint, void* sceneTreeLoad);
+        internal static extern void Android_libgodot_bind(void* entryPoint, void* sceneTreeLoad, void* projectSettingsLoad);
 
         [DllImport("libgodot", CallingConvention = CallingConvention.StdCall)]
-        internal static extern void libgodot_bind(void* entryPoint, void* sceneTreeLoad);
+        internal static extern void libgodot_bind(void* entryPoint, void* sceneTreeLoad, void* projectSettingsLoad);
 
         [DllImport("libgodot", CallingConvention = CallingConvention.StdCall)]
         internal static extern int godot_main(int amount, string[] args);
+        internal static ProjectSettingsLoad _projectSettingsLoad;
         internal static SceneTreeLoad _sceneTreeLoad;
-        internal static void RunStartUp(void* startup)
+        internal static GDentryPoint _entryPoint;
+
+        internal static void SceneTreeMain(void* startup)
         {
             _sceneTreeLoad(SceneTree.Construct(startup));
+        }
+
+        internal static void ProjectSettingsMain(void* startup)
+        {
+            _projectSettingsLoad(ProjectSettings.Construct(startup));
+        }
+
+        internal static bool GDentryPointMain(GDExtensionInterface interface_, void* library, GDExtensionInitialization* expIntilzation)
+        {
+            return _entryPoint(interface_, library, expIntilzation);
+        }
+
+        public static int RunGodot(string[] args, GDentryPoint entryPoint, SceneTreeLoad sceneTreeLoad, ProjectSettingsLoad projectSettingsLoad, bool verboes = false)
+        {
+            if (sceneTreeLoad is null)
+            {
+                throw new Exception("Needs sceneTreeLoad");
+            }
+            if (_sceneTreeLoad is not null || _entryPoint is not null || _projectSettingsLoad is not null)
+            {
+                throw new Exception("All ready bound into godot");
+            }
+            var delGDentryPointMain = new GDentryPoint(GDentryPointMain);
+            var delSceneTreeMain = new SceneTreeLoadNative(SceneTreeMain);
+            var delProjectSettingsMain = new ProjectSettingsLoadNative(ProjectSettingsMain);
+            GC.KeepAlive(delGDentryPointMain);
+            GC.KeepAlive(delSceneTreeMain);
+            GC.KeepAlive(delProjectSettingsMain);
+            _sceneTreeLoad = sceneTreeLoad;
+            _entryPoint = entryPoint;
+            _projectSettingsLoad = projectSettingsLoad;
+            var entryPointPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(delGDentryPointMain);
+            var sceneTreeMainPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(delSceneTreeMain);
+            var projectSettingsMainPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(delProjectSettingsMain);
+            if (AndroidTest.Check())
+            {
+                Android_libgodot_bind(entryPointPointer, sceneTreeMainPointer, projectSettingsMainPointer);
+                return 0;
+            }
+            else
+            {
+                CheckIfLatestLibraryInRoot();
+                try
+                {
+                    libgodot_bind(entryPointPointer, sceneTreeMainPointer, projectSettingsMainPointer);
+                }
+                catch (DllNotFoundException)
+                {
+                    FallBackLoadPlatformLibrary();
+                    libgodot_bind(entryPointPointer, sceneTreeMainPointer, projectSettingsMainPointer);
+                }
+            }
+            LibGodotCustomCallable.Init();
+
+            var argss = new List<string>(args);
+            argss.Insert(0, "libgodot");
+            if (verboes)
+            {
+                argss.Add("--verbose");
+            }
+            return godot_main(argss.Count, argss.ToArray());
+        }
+
+
+        private static bool FileCompare(string file1, string file2)
+        {
+            int file1byte;
+            int file2byte;
+            FileStream fs1;
+            FileStream fs2;
+
+            // Determine if the same file was referenced two times.
+            if (file1 == file2)
+            {
+                // Return true to indicate that the files are the same.
+                return true;
+            }
+
+            // Open the two files.
+            fs1 = new FileStream(file1, FileMode.Open);
+            fs2 = new FileStream(file2, FileMode.Open);
+
+            // Check the file sizes. If they are not the same, the files
+            // are not the same.
+            if (fs1.Length != fs2.Length)
+            {
+                // Close the file
+                fs1.Close();
+                fs2.Close();
+
+                // Return false to indicate files are different
+                return false;
+            }
+
+            // Read and compare a byte from each file until either a
+            // non-matching set of bytes is found or until the end of
+            // file1 is reached.
+            do
+            {
+                // Read one byte from each file.
+                file1byte = fs1.ReadByte();
+                file2byte = fs2.ReadByte();
+            }
+            while ((file1byte == file2byte) && (file1byte != -1));
+
+            // Close the files.
+            fs1.Close();
+            fs2.Close();
+
+            // Return the success of the comparison. "file1byte" is
+            // equal to "file2byte" at this point only if the files are
+            // the same.
+            return ((file1byte - file2byte) == 0);
         }
 
         private static void CheckIfLatestLibraryInRoot()
@@ -133,6 +254,7 @@ namespace LibGodotSharp
                 LazyLoadLibrary(runtimesFolder);
             }
         }
+
         private static void LazyLoadLibrary(string library)
         {
             var ex = Path.GetExtension(library);
@@ -169,97 +291,6 @@ namespace LibGodotSharp
             }
         }
 
-        public static int RunGodot(string[] args, GDentryPoint entryPoint, SceneTreeLoad sceneTreeLoad, bool verboes = false)
-        {
-            if (sceneTreeLoad is null)
-            {
-                throw new Exception("Needs sceneTreeLoad");
-            }
-            if (_sceneTreeLoad is not null)
-            {
-                throw new Exception("All ready bound into godot");
-            }
-            _sceneTreeLoad = sceneTreeLoad;
-            var entryPointPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(entryPoint);
-            var runStartUpPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate<SceneTreeLoadNative>(RunStartUp);
-            if (AndroidTest.Check())
-            {
-                Android_libgodot_bind(entryPointPointer, runStartUpPointer);
-                return 0;
-            }
-            else
-            {
-                CheckIfLatestLibraryInRoot();
-                try
-                {
-                    libgodot_bind(entryPointPointer, runStartUpPointer);
-                }
-                catch (DllNotFoundException)
-                {
-                    FallBackLoadPlatformLibrary();
-                    libgodot_bind(entryPointPointer, runStartUpPointer);
-                }
-            }
-            var argss = new List<string>(args);
-            argss.Insert(0, "libgodot");
-            if (verboes)
-            {
-                argss.Add("--verbose");
-            }
-            return godot_main(argss.Count, argss.ToArray());
-        }
-
-
-        private static bool FileCompare(string file1, string file2)
-        {
-            int file1byte;
-            int file2byte;
-            FileStream fs1;
-            FileStream fs2;
-
-            // Determine if the same file was referenced two times.
-            if (file1 == file2)
-            {
-                // Return true to indicate that the files are the same.
-                return true;
-            }
-
-            // Open the two files.
-            fs1 = new FileStream(file1, FileMode.Open);
-            fs2 = new FileStream(file2, FileMode.Open);
-
-            // Check the file sizes. If they are not the same, the files
-            // are not the same.
-            if (fs1.Length != fs2.Length)
-            {
-                // Close the file
-                fs1.Close();
-                fs2.Close();
-
-                // Return false to indicate files are different
-                return false;
-            }
-
-            // Read and compare a byte from each file until either a
-            // non-matching set of bytes is found or until the end of
-            // file1 is reached.
-            do
-            {
-                // Read one byte from each file.
-                file1byte = fs1.ReadByte();
-                file2byte = fs2.ReadByte();
-            }
-            while ((file1byte == file2byte) && (file1byte != -1));
-
-            // Close the files.
-            fs1.Close();
-            fs2.Close();
-
-            // Return the success of the comparison. "file1byte" is
-            // equal to "file2byte" at this point only if the files are
-            // the same.
-            return ((file1byte - file2byte) == 0);
-        }
 
     }
 }

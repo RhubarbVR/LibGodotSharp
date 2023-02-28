@@ -58,7 +58,7 @@ namespace Generators
 					GDExtensionMain.extensionInterface = @interface;
 					GDExtensionMain.library = library;
 					*init = new GDExtensionInitialization() {
-						minimum_initialization_level = GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_SCENE,
+						minimum_initialization_level = GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_CORE,
 						initialize = SaftyRapper.GetFunctionPointerForDelegate(Initialize),
 						deinitialize = SaftyRapper.GetFunctionPointerForDelegate(Deinitialize),
 					};
@@ -67,13 +67,15 @@ namespace Generators
 				public static unsafe void Initialize(void* userdata, GDExtensionInitializationLevel level) {
 					switch (level) {
 					case GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_CORE:
-						break;
-					case GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_SERVERS:
-						break;
-					case GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_SCENE:
 						GDExtension.Register.RegisterBuiltin();
 						GDExtension.Register.RegisterUtility();
 						GDExtension.Register.RegisterCore();
+						break;
+					case GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_SERVERS:
+						GDExtension.Register.RegisterServers();
+						break;
+					case GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_SCENE:
+						GDExtension.Register.RegisterScene();
 						{{registrations}}break;
 					case GDExtensionInitializationLevel.GDEXTENSION_INITIALIZATION_EDITOR:
 						GDExtension.Register.RegisterEditor();

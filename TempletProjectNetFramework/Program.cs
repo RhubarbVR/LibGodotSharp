@@ -10,6 +10,6 @@ internal class Program
         runVerbose = true;
 #endif
         //Passes arguments down to godot
-        return LibGodotManager.RunGodot(args, ExtensionEntry.EntryPoint, GodotApplication.LoadScene, runVerbose);
+        return LibGodotManager.RunGodot(args, ExtensionEntry.EntryPoint, GodotApplication.LoadScene, GodotApplication.LoadProjectSettings, runVerbose);
     }
 }

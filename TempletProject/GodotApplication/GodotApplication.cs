@@ -23,6 +23,15 @@ public static class GodotApplication
     }
 
     /// <summary>
+    /// Starting point to change project settings
+    /// </summary>
+    /// <param name="projectSettings"></param>
+    public static void LoadProjectSettings(ProjectSettings projectSettings)
+    {
+        ProjectSettings.SetSetting("application/config/name", "GodotApplication");
+    }
+
+    /// <summary>
     /// Main entry point for starting and using godot as a library
     /// </summary>
     /// <param name="scene"></param>

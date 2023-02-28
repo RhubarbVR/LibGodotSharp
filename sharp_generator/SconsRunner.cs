@@ -24,7 +24,7 @@ namespace SharpGenerator
 			var psi = new ProcessStartInfo
 			{
 				FileName = shellName,
-				Arguments = argsPrepend + "scons library_type=shared_library",
+				Arguments = argsPrepend + "scons library_type=shared_library debug_symbols=true",
 				WorkingDirectory = GodotRootDir
 			};
 			using var process = Process.Start(psi);

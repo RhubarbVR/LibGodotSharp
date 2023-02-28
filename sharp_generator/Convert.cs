@@ -30,6 +30,8 @@ public class Convert
         ["builtin"] = new() { "StringName", "Variant" },
         ["utility"] = new(),
         ["core"] = new(),
+        ["servers"] = new(),
+        ["scene"] = new(),
         ["editor"] = new(),
     };
     readonly Api api;
@@ -1265,6 +1267,23 @@ public class Convert
                     }
                 }
                 file.WriteLine(");");
+                file.WriteLine();
+                file.Write($"\tpublic delegate void Signal{Fixer.SnakeToPascal(sig.name)}(");
+                if (sig.arguments != null)
+                {
+                    for (var j = 0; j < sig.arguments.Length; j++)
+                    {
+                        var p = sig.arguments[j];
+                        file.Write($"{Fixer.Type(p.type, api)} {Fixer.Name(p.name)}{(j < sig.arguments.Length - 1 ? ", " : "")}");
+                    }
+                }
+                file.WriteLine(");");
+                file.WriteLine();
+                file.WriteLine($"\tpublic event Signal{Fixer.SnakeToPascal(sig.name)} {Fixer.SnakeToPascal(sig.name)}{{");
+                file.WriteLine($"\t\tadd => Connect(\"{sig.name}\", Callable.From(value, this));");
+                file.WriteLine($"\t\tremove => Disconnect(\"{sig.name}\", Callable.From(value, this));");
+                file.WriteLine("}");
+                file.WriteLine();
             }
             file.WriteLine();
         }
@@ -1365,6 +1384,31 @@ public class Convert
                 _ => t
             };
         }
+
+        file.WriteLine("\tpublic static Variant ObjectToVariant(object value)\n\t{");
+        file.WriteLine("\t\tvar valuetype = value?.GetType();");
+        file.WriteLine("\t\tif(value is null) { \n\t\t\treturn null; \n\t\t}");
+        for (var i = 1; i < types.Length; i++)
+        {
+            var t = types[i];
+            file.WriteLine($"\t\telse if (typeof({VariantTypeToCSharpType(t)}) == valuetype) \n\t\t{{");
+            file.WriteLine($"\t\t\treturn new Variant(({VariantTypeToCSharpType(t)})value);");
+            file.WriteLine("\t\t}");
+        }
+        file.WriteLine("\t\telse \n\t\t{ \n\t\t\treturn null; \n\t\t} \n\t}");
+
+        file.WriteLine("\tpublic static object VariantToObject(Variant value)\n\t{");
+        file.WriteLine("\t\tvar valuetype = value?.NativeType;");
+        file.WriteLine("\t\tif(value is null) { \n\t\t\treturn null; \n\t\t}");
+        for (var i = 1; i < types.Length; i++)
+        {
+            var t = types[i];
+            file.WriteLine($"\t\telse if (Variant.Type.{t} == valuetype) \n\t\t{{");
+            file.WriteLine($"\t\t\treturn (object)({VariantTypeToCSharpType(t)})value;");
+            file.WriteLine("\t\t}");
+        }
+        file.WriteLine("\t\telse \n\t\t{ \n\t\t\treturn null; \n\t\t} \n\t}");
+
 
         for (var i = 1; i < types.Length; i++)
         {

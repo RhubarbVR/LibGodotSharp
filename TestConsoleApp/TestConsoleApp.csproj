@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LibGodotSharpDesktop\LibGodotSharpDesktop.csproj" />
     <ProjectReference Include="..\TestLibGodotSharp\TestLibGodotSharp.csproj" />
   </ItemGroup>
 

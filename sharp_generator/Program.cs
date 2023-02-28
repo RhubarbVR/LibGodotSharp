@@ -9,7 +9,7 @@ namespace SharpGenerator
     {
         public static IntPtr GodotLibrary;
         public static string GodotRootDir;
-        public static bool skipScons = false;
+        public static bool skipScons = true;
         public static string GithubBuildVersion = null;
         public static void Warn(string message)
         {
@@ -30,7 +30,7 @@ namespace SharpGenerator
                 GodotRootDir = args[0];
             }
             var startingDir = GodotRootDir;
-            if (!File.Exists(Path.Combine(GodotRootDir, "SConstruct")))
+            if (File.Exists(Path.Combine(startingDir, "godot", "SConstruct")))
             {
                 GodotRootDir = Path.Combine(startingDir, "godot");
                 Warn("thinking it is running in github action so run scons library_type=shared_library");
