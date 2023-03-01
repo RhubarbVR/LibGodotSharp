@@ -20,7 +20,7 @@ public unsafe partial class Array : IList, ICollection
     {
         get
         {
-            return new Variant(GDExtensionMain.extensionInterface.array_operator_index(_internal_pointer, index));
+            return Variant.VariantToObject(new Variant(GDExtensionMain.extensionInterface.array_operator_index(_internal_pointer, index)));
         }
         set
         {

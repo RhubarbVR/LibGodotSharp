@@ -101,6 +101,13 @@ public class MainGodotGame
         newNode.AddChild(new ANode()); // Tests funny bug
         newNode.AddChild(new ZNode());
 
+        var array = (PackedInt32Array)new int[] { 3, 3, 3, 3, 435, 345, 3453, 53, 2, 34, 4, 23, 4, 2 };
+
+        for (int i = 0; i < array.Size(); i++)
+        {
+            Console.WriteLine(array[i]);
+        }
+
         var testButton = new Button
         {
             Text = "testButton",

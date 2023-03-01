@@ -698,7 +698,7 @@ public class Convert
         }
         else if (builtinObjectTypes.Contains(f))
         {
-            if(f == "Array")
+            if (f == "Array")
             {
                 return $"__res";
             }
@@ -1118,8 +1118,9 @@ public class Convert
 
         if (isSingleton)
         {
+            file.WriteLine($"\tprivate static {c.name} _singleton = null;");
             file.WriteLine($"\tpublic static {c.name} Singleton {{");
-            file.WriteLine($"\t\tget; protected set;");
+            file.WriteLine($"\t\tget => _singleton ??= new {c.name}(GDExtensionMain.extensionInterface.global_get_singleton(__godot_name._internal_pointer));");
             file.WriteLine("\t}");
             file.WriteLine();
         }
@@ -1340,10 +1341,6 @@ public class Convert
         for (var i = 0; i < methodRegistrations.Count; i++)
         {
             file.WriteLine(methodRegistrations[i]);
-        }
-        if (isSingleton)
-        {
-            file.WriteLine($"\t\tSingleton = new {c.name}(GDExtensionMain.extensionInterface.global_get_singleton(__godot_name._internal_pointer));");
         }
         file.WriteLine("\t}");
         file.WriteLine("}");
