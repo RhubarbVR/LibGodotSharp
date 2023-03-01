@@ -193,10 +193,10 @@ Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""LibGodotSharpAndroid"", 
 EndProject
 Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""LibGodotSharpDesktop"", ""..\LibGodotSharpDesktop\LibGodotSharpDesktop.csproj"", ""{8D862275-156A-4379-BE02-8CDFA01DF2CA}""
 EndProject";
-            ReplaceTextInFile(Path.Combine(templetDir, "GodotApplication.sln"), removeOnBuild, null);
-            ReplaceTextInFile(Path.Combine(templetDir, "GodotApplication", "GodotApplication.csproj"), "<ProjectReference Include=\"..\\..\\libgodotsharp\\LibGodotSharp.csproj\" OutputItemType=\"Analyzer\" ReferenceOutputAssembly=\"true\" />", $"<PackageReference Include=\"LibGodotSharp\" Version=\"{GithubBuildVersion}\" />");
-            ReplaceTextInFile(Path.Combine(templetDir, "Platforms", "Desktop", "DesktopPlatform.csproj"), "<ProjectReference Include=\"..\\..\\..\\LibGodotSharpDesktop\\LibGodotSharpDesktop.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Desktop\" Version=\"{GithubBuildVersion}\" />");
-            ReplaceTextInFile(Path.Combine(templetDir, "Platforms", "Android", "AndroidPlatform.csproj"), "<ProjectReference Include=\"..\\..\\..\\LibGodotSharpAndroid\\LibGodotSharpAndroid.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Android\" Version=\"{GithubBuildVersion}\" />");
+            ReplaceTextInFile(Path.Combine(templateDir, "GodotApplication.sln"), removeOnBuild, null);
+            ReplaceTextInFile(Path.Combine(templateDir, "GodotApplication", "GodotApplication.csproj"), "<ProjectReference Include=\"..\\..\\libgodotsharp\\LibGodotSharp.csproj\" OutputItemType=\"Analyzer\" ReferenceOutputAssembly=\"true\" />", $"<PackageReference Include=\"LibGodotSharp\" Version=\"{GithubBuildVersion}\" />");
+            ReplaceTextInFile(Path.Combine(templateDir, "Platforms", "Desktop", "DesktopPlatform.csproj"), "<ProjectReference Include=\"..\\..\\..\\LibGodotSharpDesktop\\LibGodotSharpDesktop.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Desktop\" Version=\"{GithubBuildVersion}\" />");
+            ReplaceTextInFile(Path.Combine(templateDir, "Platforms", "Android", "AndroidPlatform.csproj"), "<ProjectReference Include=\"..\\..\\..\\LibGodotSharpAndroid\\LibGodotSharpAndroid.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Android\" Version=\"{GithubBuildVersion}\" />");
 
 
             var net6Template = Path.Combine(Directory.GetCurrentDirectory(), "TemplateProjectNet6");
