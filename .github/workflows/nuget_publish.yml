@@ -207,20 +207,20 @@ jobs:
           name: 'NuGet packages'
           path: '**/*.nupkg'
           
-      - name: Upload Templet Project artifact Net7
+      - name: Upload Template Project artifact Net7
         uses: ./.github/actions/upload-artifact
         with:
-          name: 'Templet Project Net7'
-          path: './TempletProject/'
+          name: 'Template Project Net7'
+          path: './TemplateProject/'
 
-      - name: Upload Templet Project artifact Net6
+      - name: Upload Template Project artifact Net6
         uses: ./.github/actions/upload-artifact
         with:
-          name: 'Templet Project Net6'
-          path: './TempletProjectNet6/'
+          name: 'Template Project Net6'
+          path: './TemplateProjectNet6/'
 
-      - name: Upload Templet Project NetFramework artifact
+      - name: Upload Template Project NetFramework artifact
         uses: ./.github/actions/upload-artifact
         with:
-          name: 'Templet Project NetFramework'
-          path: './TempletProjectNetFramework/'
+          name: 'Template Project NetFramework'
+          path: './TemplateProjectNetFramework/'

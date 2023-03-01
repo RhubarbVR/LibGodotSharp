@@ -183,7 +183,7 @@ namespace SharpGenerator
             CopyFileWithDirectory("libgodot.linuxbsd.template_release.x86_64.so", "./LibGodotSharpDesktop/runtimes/linux-x64/native/libgodot.so");
 
             // Setup templet project
-            var templetDir = Path.Combine(Directory.GetCurrentDirectory(), "TempletProject");
+            var templetDir = Path.Combine(Directory.GetCurrentDirectory(), "TemplateProject");
 
             var removeOnBuild = @"Project(""{2150E333-8FDC-42A3-9474-1A3956D46DE8}"") = ""REMOVEONBUILD"", ""REMOVEONBUILD"", ""{2D13262A-4BF2-45B0-92CF-3203C4F46A95}""
 EndProject
@@ -199,11 +199,11 @@ EndProject";
             ReplaceTextInFile(Path.Combine(templetDir, "Platforms", "Android", "AndroidPlatform.csproj"), "<ProjectReference Include=\"..\\..\\..\\LibGodotSharpAndroid\\LibGodotSharpAndroid.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Android\" Version=\"{GithubBuildVersion}\" />");
 
 
-            var net6Templet = Path.Combine(Directory.GetCurrentDirectory(), "TempletProjectNet6");
-            CopyFilesRecursively(templetDir, net6Templet);
-            ReplaceTextInFile(Path.Combine(net6Templet, "GodotApplication", "GodotApplication.csproj"), "net7.0", $"net6.0");
-            ReplaceTextInFile(Path.Combine(net6Templet, "Platforms", "Desktop", "DesktopPlatform.csproj"), "net7.0", $"net6.0");
-            ReplaceTextInFile(Path.Combine(net6Templet, "Platforms", "Android", "AndroidPlatform.csproj"), "net7.0", $"net6.0");
+            var net6Template = Path.Combine(Directory.GetCurrentDirectory(), "TemplateProjectNet6");
+            CopyFilesRecursively(templetDir, net6Template);
+            ReplaceTextInFile(Path.Combine(net6Template, "GodotApplication", "GodotApplication.csproj"), "net7.0", $"net6.0");
+            ReplaceTextInFile(Path.Combine(net6Template, "Platforms", "Desktop", "DesktopPlatform.csproj"), "net7.0", $"net6.0");
+            ReplaceTextInFile(Path.Combine(net6Template, "Platforms", "Android", "AndroidPlatform.csproj"), "net7.0", $"net6.0");
 
             var removeOnBuildFrameWork = @"Project(""{2150E333-8FDC-42A3-9474-1A3956D46DE8}"") = ""REMOVEONBUILD"", ""REMOVEONBUILD"", ""{F7A1DD5C-B2BB-40FF-B106-1020AF5B7C6B}""
 EndProject
@@ -212,13 +212,13 @@ EndProject
 Project(""{9A19103F-16F7-4668-BE54-9A1E7A4F7556}"") = ""LibGodotSharpDesktop"", ""..\LibGodotSharpDesktop\LibGodotSharpDesktop.csproj"", ""{37A6D2F8-CBF7-4998-B375-926A09F20404}""
 EndProject";
 
-            var netframeworkTemplet = Path.Combine(Directory.GetCurrentDirectory(), "TempletProjectNetFramework");
-            ReplaceTextInFile(Path.Combine(netframeworkTemplet, "GodotApplication.sln"), removeOnBuildFrameWork, null);
-            ReplaceTextInFile(Path.Combine(netframeworkTemplet, "GodotApplication.csproj"), "<ProjectReference Include=\"..\\libgodotsharp\\LibGodotSharp.csproj\" OutputItemType=\"Analyzer\" ReferenceOutputAssembly=\"true\" />", $"<PackageReference Include=\"LibGodotSharp\" Version=\"{GithubBuildVersion}\" />");
-            ReplaceTextInFile(Path.Combine(netframeworkTemplet, "GodotApplication.csproj"), "<ProjectReference Include=\"..\\LibGodotSharpDesktop\\LibGodotSharpDesktop.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Desktop\" Version=\"{GithubBuildVersion}\" />");
+            var netframeworkTemplate = Path.Combine(Directory.GetCurrentDirectory(), "TemplateProjectNetFramework");
+            ReplaceTextInFile(Path.Combine(netframeworkTemplate, "GodotApplication.sln"), removeOnBuildFrameWork, null);
+            ReplaceTextInFile(Path.Combine(netframeworkTemplate, "GodotApplication.csproj"), "<ProjectReference Include=\"..\\libgodotsharp\\LibGodotSharp.csproj\" OutputItemType=\"Analyzer\" ReferenceOutputAssembly=\"true\" />", $"<PackageReference Include=\"LibGodotSharp\" Version=\"{GithubBuildVersion}\" />");
+            ReplaceTextInFile(Path.Combine(netframeworkTemplate, "GodotApplication.csproj"), "<ProjectReference Include=\"..\\LibGodotSharpDesktop\\LibGodotSharpDesktop.csproj\" />", $"<PackageReference Include=\"LibGodotSharp.Desktop\" Version=\"{GithubBuildVersion}\" />");
 
 
-            Console.WriteLine("Done setting up TempletProject");
+            Console.WriteLine("Done setting up TemplateProject");
         }
 
         private static void CopyFilesRecursively(string sourcePath, string targetPath)
