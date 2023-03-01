@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 
@@ -27,10 +28,9 @@ namespace Generators
                         break;
                 }
                 unregistrations = $"GDExtensionMain.extensionInterface.classdb_unregister_extension_class(GDExtensionMain.library, {n.@namespace}.{n.name}.__godot_name._internal_pointer);\n\t\t\t" + unregistrations;
-                classes[i] = classes.Last();
-                classes.RemoveAt(classes.Count - 1);
             }
-			var assimblyName = context.Compilation.AssemblyName ?? "NoName";
+            Debug.WriteLine($"Building Entry {registrations}");
+            var assimblyName = context.Compilation.AssemblyName ?? "NoName";
             var source = $$"""
 			using System;
 			using System.Runtime.CompilerServices;

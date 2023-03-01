@@ -13,12 +13,20 @@ namespace Generators
 
 		public void Execute(GeneratorExecutionContext context)
 		{
-			try
-			{
+#if DEBUG
+            //if (!Debugger.IsAttached)
+            //{
+            //    Debugger.Launch();
+            //}
+#endif
+            Debug.WriteLine("Execute code generator");
+            try
+            {
 				var rec = (SyntaxReciever)context.SyntaxReceiver!;
 				var classes = new List<Register.Data>();
 				foreach (var cSyntax in rec.names)
 				{
+                    Debug.WriteLine($"Load class {cSyntax}");
 					var c = (INamedTypeSymbol)context.Compilation.GetSemanticModel(cSyntax.SyntaxTree).GetDeclaredSymbol(cSyntax);
 					var methods = new Methods();
 					var sBase = GetSpecialBase(c);
@@ -28,8 +36,10 @@ namespace Generators
 					methods.Generate(context, c);
 					var data = Register.Generate(context, c, notification, sBase);
 					classes.Add(data);
-				}
-				Entry.Execute(context, classes);
+                    Debug.WriteLine($"Added class {cSyntax}");
+                }
+                Debug.WriteLine($"Building Entry class");
+                Entry.Execute(context, classes);
 			}
 			catch (System.Exception e)
 			{

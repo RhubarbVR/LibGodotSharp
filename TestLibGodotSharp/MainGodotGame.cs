@@ -5,6 +5,8 @@ namespace GodotGame;
 
 public class MainGodotGame
 {
+    public static bool RunInVR = false;
+
     public static HelloFromLibGodot AddCube(Vector3 pos)
     {
         var meshRender = new HelloFromLibGodot
@@ -17,9 +19,12 @@ public class MainGodotGame
     public static void LoadProjectSettings(ProjectSettings projectSettings)
     {
         ProjectSettings.SetSetting("application/config/name", "TestConsoleApp");
-        ProjectSettings.SetSetting("xr/openxr/enabled", true);
-        ProjectSettings.SetSetting("xr/shaders/enabled", true);
-        ProjectSettings.SetSetting("display/window/vsync/vsync_mode", 0);
+        if (RunInVR)
+        {
+            ProjectSettings.SetSetting("xr/openxr/enabled", true);
+            ProjectSettings.SetSetting("xr/shaders/enabled", true);
+            ProjectSettings.SetSetting("display/window/vsync/vsync_mode", 0);
+        }
     }
 
     static HelloFromLibGodot[] allCubes = System.Array.Empty<HelloFromLibGodot>();
@@ -86,6 +91,16 @@ public class MainGodotGame
         newNode.AddChild(AddCube(new Vector3(-1, -1, -1)));
         newNode.AddChild(AddCube(new Vector3(0, 1, 1)));
 
+        var testNode = new Node3D();
+        newNode.AddChild(testNode);
+        foreach (var item in newNode.GetChildren())
+        {
+            Console.WriteLine($"{item}");
+        }
+
+        newNode.AddChild(new ANode()); // Tests funny bug
+        newNode.AddChild(new ZNode());
+
         var testButton = new Button
         {
             Text = "testButton",
@@ -111,7 +126,7 @@ func _ready():
         };
         script.Reload();
         newNode.AddChild(e);
-        scene.Root.UseXr = true;
+        scene.Root.UseXr = RunInVR;
         scene.Root.AddChild(newNode);
         e.SetScript(script);
     }

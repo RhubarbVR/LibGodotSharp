@@ -267,7 +267,7 @@ public class Convert
         {
             file.WriteLine($"[StructLayout(LayoutKind.Explicit, Size = {size})]");
         }
-        file.WriteLine($"public unsafe partial {(hasPointer ? "class" : "struct")} {Fixer.Type(c.name, api)} {{");
+        file.WriteLine($"public unsafe partial {(hasPointer ? "class" : "struct")} {Fixer.Type(c.name, api)}{(hasPointer ? " : IDisposable" : "")} {{");
         file.WriteLine();
 
         if (hasPointer)
@@ -375,7 +375,9 @@ public class Convert
 
         if (hasPointer)
         {
-            file.WriteLine($"\t~{Fixer.Type(c.name, api)}() => __destructor(_internal_pointer);");
+            //file.WriteLine($"\t~{Fixer.Type(c.name, api)}() => __destructor(_internal_pointer);");
+            file.WriteLine();
+            file.WriteLine($"   public void Dispose()\r\n   {{\r\n      __destructor(_internal_pointer);\r\n      GC.SuppressFinalize(this);\r\n   }}");
             file.WriteLine();
             file.WriteLine("\t[StructLayout(LayoutKind.Explicit, Size = StructSize)]");
             file.WriteLine("\tpublic struct InternalStruct { }");
@@ -409,10 +411,16 @@ public class Convert
         file.WriteLine();
 
         file.WriteLine("\tpublic static void Register() {");
+        if (hasPointer)
+        {
+            file.WriteLine($"\t\t__destructor = GDExtensionMain.extensionInterface.variant_get_ptr_destructor((Native.GDExtensionVariantType)Variant.Type.{Fixer.Type(c.name, api)});");
+        }
         foreach (var member in membersWithFunctions)
         {
-            file.WriteLine($"\t\t{member}_getter = GDExtensionMain.extensionInterface.variant_get_ptr_getter((Native.GDExtensionVariantType)Variant.Type.{Fixer.Type(c.name, api)}, new StringName(\"{member}\")._internal_pointer);");
-            file.WriteLine($"\t\t{member}_setter = GDExtensionMain.extensionInterface.variant_get_ptr_setter((Native.GDExtensionVariantType)Variant.Type.{Fixer.Type(c.name, api)}, new StringName(\"{member}\")._internal_pointer);");
+            file.WriteLine($"\t\tvar _stringName{member} = new StringName(\"{member}\");");
+            file.WriteLine($"\t\t{member}_getter = GDExtensionMain.extensionInterface.variant_get_ptr_getter((Native.GDExtensionVariantType)Variant.Type.{Fixer.Type(c.name, api)}, _stringName{member}._internal_pointer);");
+            file.WriteLine($"\t\t{member}_setter = GDExtensionMain.extensionInterface.variant_get_ptr_setter((Native.GDExtensionVariantType)Variant.Type.{Fixer.Type(c.name, api)}, _stringName{member}._internal_pointer);");
+            file.WriteLine($"\t\t_stringName{member}.Dispose();");
         }
         for (var i = 0; i < constructorRegistrations.Count; i++)
         {
@@ -425,10 +433,6 @@ public class Convert
         for (var i = 0; i < methodRegistrations.Count; i++)
         {
             file.WriteLine(methodRegistrations[i]);
-        }
-        if (hasPointer)
-        {
-            file.WriteLine($"\t\t__destructor = GDExtensionMain.extensionInterface.variant_get_ptr_destructor((Native.GDExtensionVariantType)Variant.Type.{Fixer.Type(c.name, api)});");
         }
         if (c.constants != null)
         {
@@ -654,9 +658,19 @@ public class Convert
         }
     }
 
+    bool IsClassType(string type)
+    {
+        var f = Fixer.Type(type, api);
+        return f == "Array" || f.StartsWith("Array<");
+    }
+
     string ReturnLocationType(string type, string name)
     {
         var f = Fixer.Type(type, api);
+        if (IsClassType(type))
+        {
+            return $"{f} {name} = new {f}();";
+        }
         if (builtinObjectTypes.Contains(f))
         {
             return $"{f}.InternalStruct {name}";
@@ -684,6 +698,10 @@ public class Convert
         }
         else if (builtinObjectTypes.Contains(f))
         {
+            if(f == "Array")
+            {
+                return $"__res";
+            }
             return $"new {f}(GDExtensionMain.extensionInterface.MoveToUnmanaged(__res))";
         }
         else if (objectTypes.Contains(type))
@@ -719,11 +737,11 @@ public class Convert
     {
         if (value.StartsWith("Array["))
         {
-            return $"new Array()";
+            return $"new()";
         }
         if (value.Contains('(')) { return $"new {value}"; }
         if (value == "{}") { return "new Dictionary()"; }
-        if (value == "[]") { return "new Array()"; }
+        if (value == "[]") { return "new()"; }
         if (value.Contains('&')) { return $"new StringName({value[1..]})"; }
         if (value == "") { return $"new {type}()"; }
         if (type == "Variant" && value == "null") { return "Variant.Nil"; }
@@ -832,15 +850,21 @@ public class Convert
                     return;
                 }
                 m = $"__methodPointer_{methodRegistrations.Count}";
-                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.classdb_get_method_bind(__godot_name._internal_pointer, new StringName(\"{meth.name}\")._internal_pointer, {meth.hash ?? 0});");
+                methodRegistrations.Add($"\t\tvar _stringName{m} = new StringName(\"{meth.name}\");");
+                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.classdb_get_method_bind(__godot_name._internal_pointer, _stringName{m}._internal_pointer, {meth.hash ?? 0});");
+                methodRegistrations.Add($"\t\t_stringName{m}.Dispose();");
                 break;
             case MethodType.Native:
                 m = $"__methodPointer_{methodRegistrations.Count}";
-                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.variant_get_ptr_builtin_method((Native.GDExtensionVariantType)Variant.Type.{className}, new StringName(\"{meth.name}\")._internal_pointer, {meth.hash ?? 0});");
+                methodRegistrations.Add($"\t\tvar _stringName{m} = new StringName(\"{meth.name}\");");
+                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.variant_get_ptr_builtin_method((Native.GDExtensionVariantType)Variant.Type.{className}, _stringName{m}._internal_pointer, {meth.hash ?? 0});");
+                methodRegistrations.Add($"\t\t_stringName{m}.Dispose();");
                 break;
             case MethodType.Utility:
                 m = $"__methodPointer_{methodRegistrations.Count}";
-                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.variant_get_ptr_utility_function(new StringName(\"{meth.name}\")._internal_pointer, {meth.hash ?? 0});");
+                methodRegistrations.Add($"\t\tvar _stringName{m} = new StringName(\"{meth.name}\");");
+                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.variant_get_ptr_utility_function(_stringName{m}._internal_pointer, {meth.hash ?? 0});");
+                methodRegistrations.Add($"\t\t_stringName{m}.Dispose();");
                 break;
         }
         if (meth.isVararg)
@@ -914,7 +938,14 @@ public class Convert
         {
             if (ret != "")
             {
-                file.Write("&__res");
+                if (!IsClassType(ret))
+                {
+                    file.Write("&__res");
+                }
+                else
+                {
+                    file.Write("__res._internal_pointer");
+                }
             }
             else
             {
@@ -955,7 +986,14 @@ public class Convert
         }
         else if (ret != "")
         {
-            file.Write($", &__res");
+            if (!IsClassType(ret))
+            {
+                file.Write(", &__res");
+            }
+            else
+            {
+                file.Write(", __res._internal_pointer");
+            }
         }
         else
         {
@@ -1073,22 +1111,15 @@ public class Convert
         file.WriteLine("namespace GDExtension;");
         file.WriteLine("");
         file.Write("public unsafe ");
-        if (c.isInstantiable == false)
-        {
-            //file.Write("abstract ");
-        }
-
+        var isSingleton = api.singletons.Any(x => x.type == c.name);
         file.WriteLine($"partial class {c.name} : {(c.inherits ?? "Wrapped")} {{");
         file.WriteLine();
 
 
-        var isSingleton = api.singletons.Any(x => x.type == c.name);
         if (isSingleton)
         {
-            //file.WriteLine($"\tpublic static {c.name} Singleton;");
-            //see note below
             file.WriteLine($"\tpublic static {c.name} Singleton {{");
-            file.WriteLine($"\t\tget => new {c.name}(GDExtensionMain.extensionInterface.global_get_singleton(__godot_name._internal_pointer));");
+            file.WriteLine($"\t\tget; protected set;");
             file.WriteLine("\t}");
             file.WriteLine();
         }
@@ -1312,9 +1343,7 @@ public class Convert
         }
         if (isSingleton)
         {
-            //they are registered after every init level, cashing not possible
-            //https://github.com/godotengine/godot/pull/65018 (?)
-            //file.WriteLine($"\t\tSingleton = new {c.name}(GDExtensionMain.extensionInterface.global_get_singleton(__godot_name);");
+            file.WriteLine($"\t\tSingleton = new {c.name}(GDExtensionMain.extensionInterface.global_get_singleton(__godot_name._internal_pointer));");
         }
         file.WriteLine("\t}");
         file.WriteLine("}");

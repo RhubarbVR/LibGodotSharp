@@ -1411,8 +1411,15 @@ namespace GDExtension
 			[UnmanagedFunctionPointer(CallingConvention.StdCall)]
 			public delegate void* array_operator_index_const_delegate(void* p_self, long p_index);
 
-			public IntPtr array_ref;// void (*array_ref)(GDExtensionTypePtr p_self, GDExtensionConstTypePtr p_from); // p_self should be an Array ptr
-            public IntPtr array_set_typed;// void (*array_set_typed)(GDExtensionTypePtr p_self, uint32_t p_type, GDExtensionConstStringNamePtr p_class_name, GDExtensionConstVariantPtr p_script); // p_self should be an Array ptr
+            public Native.GDExtensionInterface.array_ref_delegate array_ref;// void (*array_ref)(GDExtensionTypePtr p_self, GDExtensionConstTypePtr p_from); // p_self should be an Array ptr
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            public delegate void array_ref_delegate(void* p_self, void* p_from);
+
+            public Native.GDExtensionInterface.array_set_typed_delegate array_set_typed;// void (*array_set_typed)(GDExtensionTypePtr p_self, uint32_t p_type, GDExtensionConstStringNamePtr p_class_name, GDExtensionConstVariantPtr p_script); // p_self should be an Array ptr
+
+            [UnmanagedFunctionPointer(CallingConvention.StdCall)]
+            public delegate void array_set_typed_delegate(void* p_self, uint p_type, void* p_class_name, void* p_script);
 
             /// <summary>
             /// p_self should be an Dictionary ptr
