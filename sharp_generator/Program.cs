@@ -183,7 +183,7 @@ namespace SharpGenerator
             CopyFileWithDirectory("libgodot.linuxbsd.template_release.x86_64.so", "./LibGodotSharpDesktop/runtimes/linux-x64/native/libgodot.so");
 
             // Setup templet project
-            var templetDir = Path.Combine(Directory.GetCurrentDirectory(), "TemplateProject");
+            var templateDir = Path.Combine(Directory.GetCurrentDirectory(), "TemplateProject");
 
             var removeOnBuild = @"Project(""{2150E333-8FDC-42A3-9474-1A3956D46DE8}"") = ""REMOVEONBUILD"", ""REMOVEONBUILD"", ""{2D13262A-4BF2-45B0-92CF-3203C4F46A95}""
 EndProject
