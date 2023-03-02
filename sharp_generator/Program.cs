@@ -65,6 +65,7 @@ namespace SharpGenerator
                     throw new Exception("Failed to run scons");
                 }
             }
+            path = Path.GetFullPath(path);
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
                 path = RuntimeInformation.ProcessArchitecture switch
@@ -102,6 +103,7 @@ namespace SharpGenerator
             try
             {
                 var copyfile = Path.Combine(path, "..", "libgodot");
+                copyfile = Path.GetFullPath(copyfile);
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     copyfile += ".dll";
@@ -119,7 +121,7 @@ namespace SharpGenerator
                 {
                     throw new Exception($"Editor file copy failed from {path} to {copyfile}");
                 }
-                GodotLibrary = NativeLibrary.Load(copyfile);
+                GodotLibrary = NativeLibrary.Load(Path.GetFullPath(copyfile));
                 if (GodotLibrary == IntPtr.Zero)
                 {
                     throw new Exception("Failed to laod godot");
@@ -144,6 +146,7 @@ namespace SharpGenerator
                 throw new Exception("Failed to find extension_api json");
             }
             var ginDirParent = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..", "..", "libgodotsharp");
+            ginDirParent = Path.GetFullPath(ginDirParent);
             if (!Directory.Exists(ginDirParent))
             {
                 ginDirParent = Path.Combine(Directory.GetCurrentDirectory(), "libgodotsharp");
@@ -152,6 +155,7 @@ namespace SharpGenerator
             {
                 ginDirParent = Path.Combine(Directory.GetCurrentDirectory(), "..", "libgodotsharp");
             }
+            ginDirParent = Path.GetFullPath(ginDirParent);
             if (!Directory.Exists(Path.Combine(ginDirParent, "Extensions")))
             {
                 throw new Exception("Don't know where to put files");
@@ -200,7 +204,7 @@ EndProject";
 
 
             var net6Template = Path.Combine(Directory.GetCurrentDirectory(), "TemplateProjectNet6");
-            CopyFilesRecursively(templetDir, net6Template);
+            CopyFilesRecursively(templateDir, net6Template);
             ReplaceTextInFile(Path.Combine(net6Template, "GodotApplication", "GodotApplication.csproj"), "net7.0", $"net6.0");
             ReplaceTextInFile(Path.Combine(net6Template, "Platforms", "Desktop", "DesktopPlatform.csproj"), "net7.0", $"net6.0");
             ReplaceTextInFile(Path.Combine(net6Template, "Platforms", "Android", "AndroidPlatform.csproj"), "net7.0", $"net6.0");
