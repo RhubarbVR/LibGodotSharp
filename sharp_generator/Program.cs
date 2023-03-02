@@ -200,7 +200,7 @@ EndProject";
 
 
             var net6Template = Path.Combine(Directory.GetCurrentDirectory(), "TemplateProjectNet6");
-            CopyFilesRecursively(templetDir, net6Template);
+            CopyFilesRecursively(templateDir, net6Template);
             ReplaceTextInFile(Path.Combine(net6Template, "GodotApplication", "GodotApplication.csproj"), "net7.0", $"net6.0");
             ReplaceTextInFile(Path.Combine(net6Template, "Platforms", "Desktop", "DesktopPlatform.csproj"), "net7.0", $"net6.0");
             ReplaceTextInFile(Path.Combine(net6Template, "Platforms", "Android", "AndroidPlatform.csproj"), "net7.0", $"net6.0");
