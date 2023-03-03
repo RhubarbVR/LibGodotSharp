@@ -56,4 +56,35 @@ public unsafe partial class PackedByteArray
         }
         return data;
     }
+
+    public static implicit operator List<byte>(PackedByteArray self)
+    {
+        var data = new List<byte>((int)self.Size());
+        for (int i = 0; i < data.Count; i++)
+        {
+            data[i] = self[i];
+        }
+        return data;
+    }
+
+    public static implicit operator byte[](PackedByteArray self)
+    {
+        var data = new byte[self.Size()];
+        for (int i = 0; i < self.Size(); i++)
+        {
+            data[i] = self[i];
+        }
+        return data;
+    }
+
+    public static implicit operator Span<byte>(PackedByteArray self)
+    {
+        var data = new byte[self.Size()];
+        for (int i = 0; i < self.Size(); i++)
+        {
+            data[i] = self[i];
+        }
+        return data;
+    }
+
 }

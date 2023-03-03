@@ -28,6 +28,69 @@ public unsafe partial class Array<T> : Array, IList<T>, ICollection<T>, IEnumera
             base[index] = value;
         }
     }
+    public static implicit operator Array<T>(List<T> self)
+    {
+        var data = new Array<T>();
+        data.Resize(self.Count);
+        for (int i = 0; i < self.Count; i++)
+        {
+            data[i] = self[i];
+        }
+        return data;
+    }
+
+    public static implicit operator Array<T>(T[] self)
+    {
+        var data = new Array<T>();
+        data.Resize(self.Length);
+        for (int i = 0; i < self.Length; i++)
+        {
+            data[i] = self[i];
+        }
+        return data;
+    }
+
+    public static implicit operator Array<T>(Span<T> self)
+    {
+        var data = new Array<T>();
+        data.Resize(self.Length);
+        for (int i = 0; i < self.Length; i++)
+        {
+            data[i] = self[i];
+        }
+        return data;
+    }
+
+    public static implicit operator List<T>(Array<T> self)
+    {
+        var data = new List<T>((int)self.Size());
+        for (int i = 0; i < data.Count; i++)
+        {
+            data[i] = self[i];
+        }
+        return data;
+    }
+
+    public static implicit operator T[](Array<T> self)
+    {
+        var data = new T[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            data[i] = self[i];
+        }
+        return data;
+    }
+
+    public static implicit operator Span<T>(Array<T> self)
+    {
+        var data = new T[self.Length];
+        for (int i = 0; i < self.Length; i++)
+        {
+            data[i] = self[i];
+        }
+        return data;
+    }
+
 
     int ICollection<T>.Count => (int)Size();
 

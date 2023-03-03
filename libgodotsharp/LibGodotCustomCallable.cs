@@ -121,11 +121,6 @@ namespace LibGodotSharp
             get_object_bind = new get_object_bind_del(Get_object_bind_del);
             disposes_bind = new disposes_bind_del(Disposes_bind_del);
             call_bind = new call_bind_del(Call_bind_del);
-            GC.KeepAlive(callable_hash_bind);
-            GC.KeepAlive(get_as_text_bind);
-            GC.KeepAlive(get_object_bind);
-            GC.KeepAlive(disposes_bind);
-            GC.KeepAlive(call_bind);
             var callable_hash_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(callable_hash_bind);
             var get_as_text_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(get_as_text_bind);
             var get_object_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(get_object_bind);

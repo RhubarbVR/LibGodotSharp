@@ -126,7 +126,7 @@ namespace Generators
 					}
 					else if (TypeToVariantType(arg.Item1) == "Object")
 					{
-						args += $"({arg.Item1})GDExtension.Object.ConstructUnknown(p_args[{j}])"; //note: changed
+						args += $"({arg.Item1})GDExtension.Object.ConstructUnknown(*(void**)p_args[{j}])";
 					}
 					else
 					{
@@ -179,7 +179,7 @@ namespace Generators
 					void* r_return,
 					GDExtensionCallError* r_error
 				) {
-					GDExtensionMain.extensionInterface.variant_new_nil(r_return); //no clue why this is needed
+					GDExtensionMain.extensionInterface.variant_new_nil(r_return);
 					var instance = ({{c.Name}})p_instance;
 					switch ((int)method_userdata) {
 			""";

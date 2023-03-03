@@ -56,18 +56,12 @@ namespace LibGodotSharp
             {
                 throw new Exception("All ready bound into godot");
             }
-            var delGDentryPointMain = new GDentryPoint(GDentryPointMain);
-            var delSceneTreeMain = new SceneTreeLoadNative(SceneTreeMain);
-            var delProjectSettingsMain = new ProjectSettingsLoadNative(ProjectSettingsMain);
-            GC.KeepAlive(delGDentryPointMain);
-            GC.KeepAlive(delSceneTreeMain);
-            GC.KeepAlive(delProjectSettingsMain);
             _sceneTreeLoad = sceneTreeLoad;
             _entryPoint = entryPoint;
             _projectSettingsLoad = projectSettingsLoad;
-            var entryPointPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(delGDentryPointMain);
-            var sceneTreeMainPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(delSceneTreeMain);
-            var projectSettingsMainPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(delProjectSettingsMain);
+            var entryPointPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(GDentryPointMain);
+            var sceneTreeMainPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(SceneTreeMain);
+            var projectSettingsMainPointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(ProjectSettingsMain);
             if (AndroidTest.Check())
             {
                 Android_libgodot_bind(entryPointPointer, sceneTreeMainPointer, projectSettingsMainPointer);

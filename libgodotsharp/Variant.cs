@@ -49,6 +49,12 @@ public sealed unsafe partial class Variant
         var objectPtr = value != null ? value._internal_pointer : null;
         constructors[(int)Variant.Type.Object].fromType(ptr, &objectPtr);
     }
+    public static Object GetObjectFromVariant(Variant _object)
+    {
+        void* res;
+        constructors[(int)Type.Object].toType(&res, _object._internal_pointer);
+        return Object.ConstructUnknown(res);
+    }
 
     public static Object GetObjectFromPointer(void* ptr)
     {
@@ -61,7 +67,15 @@ public sealed unsafe partial class Variant
 
     public Type NativeType => (Type)GDExtensionMain.extensionInterface.variant_get_type(_internal_pointer);
 
-    private Variant() => _internal_pointer = GDExtensionMain.extensionInterface.mem_alloc(24);
+    internal Variant()
+    {
+        _internal_pointer = GDExtensionMain.extensionInterface.mem_alloc(24);
+        byte* dataPointer = (byte*)_internal_pointer;
+        for (int i = 0; i < 24; i++)
+        {
+            dataPointer[i] = 0;
+        }
+    }
 
     internal Variant(void* data)
     {

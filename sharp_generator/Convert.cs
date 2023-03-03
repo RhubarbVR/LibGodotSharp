@@ -523,6 +523,8 @@ public class Convert
         if (hasPointer)
         {
             file.WriteLine("\t\t_internal_pointer = GDExtensionMain.extensionInterface.mem_alloc(StructSize);");
+            file.WriteLine("\t\t\t\tvar bytePointer = (byte*)_internal_pointer;\n\t\tfor (int i = 0; i < StructSize; i++)\n\t\t{\n\t\t\tbytePointer[i] = 0;\n\t\t}");
+
         }
         var m = $"__constructorPointer_{constructorRegistrations.Count}";
         file.WriteLine($"\t\tvar constructor = {m};");
@@ -661,12 +663,16 @@ public class Convert
     bool IsClassType(string type)
     {
         var f = Fixer.Type(type, api);
-        return f == "Array" || f.StartsWith("Array<");
+        return f == "Array" || f.StartsWith("Array<") || f == "Variant";
     }
 
     string ReturnLocationType(string type, string name)
     {
         var f = Fixer.Type(type, api);
+        if(f == "Variant")
+        {
+            return $"var {name} = new Variant()";
+        }
         if (IsClassType(type))
         {
             return $"{f} {name} = new {f}();";
@@ -692,10 +698,6 @@ public class Convert
         {
             return "StringMarshall.ToManaged(&__res)";
         }
-        else if (f == "Variant")
-        {
-            return "new Variant(__res)";
-        }
         else if (builtinObjectTypes.Contains(f))
         {
             if (f == "Array")
@@ -703,6 +705,10 @@ public class Convert
                 return $"__res";
             }
             return $"new {f}(GDExtensionMain.extensionInterface.MoveToUnmanaged(__res))";
+        }
+        else if(f == "Variant")
+        {
+            return $"__res";
         }
         else if (objectTypes.Contains(type))
         {
@@ -1478,8 +1484,11 @@ public class Convert
             file.Write(VariantTypeToCSharpType(t));
             file.Write(" Get");
             file.Write(t);
-            file.WriteLine("FromPointer(void* ptr) {");
-            file.WriteLine("\t\t//todo: typecheck");
+            file.WriteLine("FromVariant(Variant data) {");
+            file.WriteLine("\t\tvar ptr = data._internal_pointer;");
+            file.WriteLine($"\t\tif (data.NativeType != Variant.Type.{t}) {{");
+            file.WriteLine($"\t\t\treturn default;");
+            file.WriteLine("\t\t}");            
             file.Write("\t\t");
             if (t == "String")
             {
@@ -1527,7 +1536,7 @@ public class Convert
             file.Write(t);
             file.Write("() => Get");
             file.Write(t);
-            file.WriteLine("FromPointer(_internal_pointer);");
+            file.WriteLine("FromVariant(this);");
         }
         file.WriteLine();
 
