@@ -2,6 +2,7 @@ using LibGodotSharp;
 using System;
 using System.Reflection.Metadata;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Xml.Linq;
 
 namespace GDExtension;
@@ -16,30 +17,12 @@ public unsafe partial class Callable
         }
         _delegate = @delegate;
         _object = @object;
-
-        int fake;
-        lock (callables)
-        {
-            fake = 0;
-            foreach (var call in callables)
-            {
-                if (call.Key == fake)
-                {
-                    fake++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            callables.Add(fake, this);
-        }
-        _internal_pointer = LibGodotCustomCallable.Libgodot_create_callable((void*)fake);
+        gCHandle = GCHandle.Alloc(this);
+        _internal_pointer = LibGodotCustomCallable.Libgodot_create_callable((void*)(IntPtr)gCHandle);
     }
-    internal static Dictionary<int, Callable> callables = new();
-
-    internal readonly Delegate _delegate;
-    internal readonly Object _object;
+    internal readonly GCHandle gCHandle;
+    internal Delegate _delegate;
+    internal Object _object;
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Callable From<T>(T target, Object @object = null) where T : Delegate
@@ -57,5 +40,12 @@ public unsafe partial class Callable
             throw new NullReferenceException();
         }
         return new Callable(target, @object);
+    }
+
+    internal void Free()
+    {
+        gCHandle.Free();
+        _delegate = null;
+        _object = null;
     }
 }

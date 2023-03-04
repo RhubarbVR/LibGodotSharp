@@ -57,10 +57,10 @@ namespace Generators
 					GDExtensionMain.extensionInterface.object_set_instance(_internal_pointer, __godot_name._internal_pointer, (void*)this);
 				}
 			#pragma warning restore CS8618
-				public static explicit operator void*({{c.Name}} instance) => (void*)GCHandle.ToIntPtr(instance.handle);
+				public static explicit operator void*({{c.Name}} instance) => (void*)(IntPtr)instance.handle;
 				public static explicit operator {{c.Name}}(void* ptr) => ({{c.Name}})(GCHandle.FromIntPtr(new IntPtr(ptr)).Target!);
 				public static {{c.Name}} Construct(void* ptr) {
-					ptr = (void*)*(((IntPtr*)ptr) + 2); //Did I miss the inverse function to 'object_set_instance'?, this only works if Godot.Object does not change
+					ptr = (void*)*(((IntPtr*)ptr) + 2);
 					return ({{c.Name}})ptr;
 				}
 				public static unsafe new void Register() {
@@ -91,7 +91,7 @@ namespace Generators
 				}
 				static unsafe void* CreateObject(void* userdata) {
 					var instance = new {{c.Name}}();
-					return instance._internal_pointer;
+					return (void*)instance._internal_pointer;
 				}
 				static unsafe void FreeObject(void* userdata, void* instancePtr) {
 					var instance = ({{c.Name}})instancePtr;

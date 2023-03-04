@@ -63,10 +63,7 @@ namespace LibGodotSharp
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static Callable GetCallable(void* customobject)
         {
-            lock (Callable.callables)
-            {
-                return Callable.callables[(int)customobject];
-            }
+            return (Callable)GCHandle.FromIntPtr(new IntPtr(customobject)).Target;
         }
 
         internal static uint Callable_hash_bind(void* targetObject)
@@ -89,10 +86,7 @@ namespace LibGodotSharp
 
         internal static void Disposes_bind_del(void* targetObject)
         {
-            lock (Callable.callables)
-            {
-                Callable.callables.Remove((int)targetObject);
-            }
+            GetCallable(targetObject).Free();
         }
 
         internal static void Call_bind_del(void* targetObject, void** args, int args_length, void* returnData, void* error)
@@ -108,24 +102,13 @@ namespace LibGodotSharp
             Variant.SaveIntoPointer(output, returnData);
         }
 
-        internal static callable_hash_bind_del callable_hash_bind;
-        internal static get_as_text_bind_del get_as_text_bind;
-        internal static get_object_bind_del get_object_bind;
-        internal static disposes_bind_del disposes_bind;
-        internal static call_bind_del call_bind;
-
         internal static void Init()
         {
-            callable_hash_bind = new callable_hash_bind_del(Callable_hash_bind);
-            get_as_text_bind = new get_as_text_bind_del(Get_as_text_bind_del);
-            get_object_bind = new get_object_bind_del(Get_object_bind_del);
-            disposes_bind = new disposes_bind_del(Disposes_bind_del);
-            call_bind = new call_bind_del(Call_bind_del);
-            var callable_hash_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(callable_hash_bind);
-            var get_as_text_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(get_as_text_bind);
-            var get_object_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(get_object_bind);
-            var disposes_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(disposes_bind);
-            var call_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(call_bind);
+            var callable_hash_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(Callable_hash_bind);
+            var get_as_text_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(Get_as_text_bind_del);
+            var get_object_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(Get_object_bind_del);
+            var disposes_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(Disposes_bind_del);
+            var call_pointer = (void*)SaftyRapper.GetFunctionPointerForDelegate(Call_bind_del);
             Libgodot_bind_custom_callable(callable_hash_pointer, get_as_text_pointer, get_object_pointer, disposes_pointer, call_pointer);
         }
     }

@@ -13,14 +13,11 @@ public unsafe partial class PackedStringArray
     {
         get
         {
-            var res = (void**)GDExtensionMain.extensionInterface.packed_string_array_operator_index(_internal_pointer, index);
-            return StringMarshall.ToManaged(*res);
+            return StringMarshall.ToManaged(GDExtensionMain.extensionInterface.packed_string_array_operator_index(_internal_pointer, index));
         }
         set
         {
-            
-            var res = (void**)GDExtensionMain.extensionInterface.packed_string_array_operator_index(_internal_pointer, index);
-            res[0] = StringMarshall.ToNative(value);
+            Set(index, value);
         }
     }
 

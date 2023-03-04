@@ -19,7 +19,7 @@ public unsafe partial class PackedFloat64Array
         }
         set
         {
-            Unsafe.Write(GDExtensionMain.extensionInterface.packed_float64_array_operator_index(_internal_pointer, index), value);
+            Set(index, value);
         }
     }
 

@@ -9,7 +9,7 @@ namespace SharpGenerator
     {
         public static IntPtr GodotLibrary;
         public static string GodotRootDir;
-        public static bool skipScons = true;
+        public static bool skipScons = false;
         public static string GithubBuildVersion = null;
         public static void Warn(string message)
         {

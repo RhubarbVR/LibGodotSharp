@@ -19,7 +19,7 @@ public unsafe partial class PackedVector2Array
         }
         set
         {
-            Unsafe.Write(GDExtensionMain.extensionInterface.packed_vector2_array_operator_index(_internal_pointer, index), value);
+            Set(index, value);
         }
     }
 

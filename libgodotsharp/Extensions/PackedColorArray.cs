@@ -19,7 +19,7 @@ public unsafe partial class PackedColorArray
         }
         set
         {
-            Unsafe.Write(GDExtensionMain.extensionInterface.packed_color_array_operator_index(_internal_pointer, index), value);
+            Set(index, value);
         }
     }
 
