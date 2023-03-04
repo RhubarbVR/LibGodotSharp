@@ -654,7 +654,7 @@ public class Convert
         }
         else if (objectTypes.Contains(type) || builtinObjectTypes.Contains(f))
         {
-            return $"{name}._internal_pointer";
+            return $"(({name} is null)? null:{name}._internal_pointer)";
         }
         else
         {
@@ -1423,6 +1423,9 @@ public class Convert
             file.WriteLine($"\t\t\treturn new Variant(({VariantTypeToCSharpType(t)})value);");
             file.WriteLine("\t\t}");
         }
+        file.WriteLine($"\t\telse if (value is Object) \n\t\t{{");
+        file.WriteLine($"\t\t\treturn (Variant)(Object)value;");
+        file.WriteLine("\t\t}");
         file.WriteLine("\t\telse \n\t\t{ \n\t\t\treturn null; \n\t\t} \n\t}");
 
         file.WriteLine("\tpublic static object VariantToObject(Variant value)\n\t{");
@@ -1435,6 +1438,7 @@ public class Convert
             file.WriteLine($"\t\t\treturn (object)({VariantTypeToCSharpType(t)})value;");
             file.WriteLine("\t\t}");
         }
+
         file.WriteLine("\t\telse \n\t\t{ \n\t\t\treturn null; \n\t\t} \n\t}");
 
 
