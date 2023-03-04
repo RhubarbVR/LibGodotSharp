@@ -267,7 +267,7 @@ public class Convert
         {
             file.WriteLine($"[StructLayout(LayoutKind.Explicit, Size = {size})]");
         }
-        file.WriteLine($"public unsafe partial {(hasPointer ? "class" : "struct")} {Fixer.Type(c.name, api)}{(hasPointer ? " : IDisposable" : "")} {{");
+        file.WriteLine($"public unsafe partial {(hasPointer ? "class" : "struct")} {Fixer.Type(c.name, api)} {{");
         file.WriteLine();
 
         if (hasPointer)
@@ -375,9 +375,7 @@ public class Convert
 
         if (hasPointer)
         {
-            //file.WriteLine($"\t~{Fixer.Type(c.name, api)}() => __destructor(_internal_pointer);");
-            file.WriteLine();
-            file.WriteLine($"   public void Dispose()\r\n   {{\r\n      __destructor(_internal_pointer);\r\n      GC.SuppressFinalize(this);\r\n   }}");
+            file.WriteLine($"\t~{Fixer.Type(c.name, api)}() => __destructor(_internal_pointer);");
             file.WriteLine();
             file.WriteLine("\t[StructLayout(LayoutKind.Explicit, Size = StructSize)]");
             file.WriteLine("\tpublic struct InternalStruct { }");
@@ -420,7 +418,6 @@ public class Convert
             file.WriteLine($"\t\tvar _stringName{member} = new StringName(\"{member}\");");
             file.WriteLine($"\t\t{member}_getter = GDExtensionMain.extensionInterface.variant_get_ptr_getter((Native.GDExtensionVariantType)Variant.Type.{Fixer.Type(c.name, api)}, _stringName{member}._internal_pointer);");
             file.WriteLine($"\t\t{member}_setter = GDExtensionMain.extensionInterface.variant_get_ptr_setter((Native.GDExtensionVariantType)Variant.Type.{Fixer.Type(c.name, api)}, _stringName{member}._internal_pointer);");
-            file.WriteLine($"\t\t_stringName{member}.Dispose();");
         }
         for (var i = 0; i < constructorRegistrations.Count; i++)
         {
@@ -856,21 +853,15 @@ public class Convert
                     return;
                 }
                 m = $"__methodPointer_{methodRegistrations.Count}";
-                methodRegistrations.Add($"\t\tvar _stringName{m} = new StringName(\"{meth.name}\");");
-                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.classdb_get_method_bind(__godot_name._internal_pointer, _stringName{m}._internal_pointer, {meth.hash ?? 0});");
-                methodRegistrations.Add($"\t\t_stringName{m}.Dispose();");
+                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.classdb_get_method_bind(__godot_name._internal_pointer, new StringName(\"{meth.name}\")._internal_pointer, {meth.hash ?? 0});");
                 break;
             case MethodType.Native:
                 m = $"__methodPointer_{methodRegistrations.Count}";
-                methodRegistrations.Add($"\t\tvar _stringName{m} = new StringName(\"{meth.name}\");");
-                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.variant_get_ptr_builtin_method((Native.GDExtensionVariantType)Variant.Type.{className}, _stringName{m}._internal_pointer, {meth.hash ?? 0});");
-                methodRegistrations.Add($"\t\t_stringName{m}.Dispose();");
+                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.variant_get_ptr_builtin_method((Native.GDExtensionVariantType)Variant.Type.{className}, new StringName(\"{meth.name}\")._internal_pointer, {meth.hash ?? 0});");
                 break;
             case MethodType.Utility:
                 m = $"__methodPointer_{methodRegistrations.Count}";
-                methodRegistrations.Add($"\t\tvar _stringName{m} = new StringName(\"{meth.name}\");");
-                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.variant_get_ptr_utility_function(_stringName{m}._internal_pointer, {meth.hash ?? 0});");
-                methodRegistrations.Add($"\t\t_stringName{m}.Dispose();");
+                methodRegistrations.Add($"\t\t{m} = GDExtensionMain.extensionInterface.variant_get_ptr_utility_function(new StringName(\"{meth.name}\")._internal_pointer, {meth.hash ?? 0});");
                 break;
         }
         if (meth.isVararg)

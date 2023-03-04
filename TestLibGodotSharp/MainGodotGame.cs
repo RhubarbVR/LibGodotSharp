@@ -101,11 +101,17 @@ public class MainGodotGame
         newNode.AddChild(new ANode()); // Tests funny bug
         newNode.AddChild(new ZNode());
 
-        var array = (PackedInt32Array)new int[] { 3, 3, 3, 3, 435, 345, 3453, 53, 2, 34, 4, 23, 4, 2 };
+        var array = (PackedInt32Array)new int[] { 3, 3, 3, 3, 435, 345, 3453, 53, 2, 34, 4, 23, 4, 2, 43, 4543534, 435342, 1, 2342345, 5345, 345, 345, 43, 543, 645, 67, 5676, 8, 64534, 5, 345, 3456, 45, 67, 76, 756867, 1, 34, 534, 5, 345, 34, 534, 634, 5, 3456, 3 };
 
         for (int i = 0; i < array.Size(); i++)
         {
             Console.WriteLine(array[i]);
+        }
+
+        var stringArray = (PackedStringArray)new string[] { "This", "IS", "A", "Packed", "Sting", "ARRAY", "I", "AM", "Testing", "It", "By", "ADDing", "STUFF", "TO", "it", "It", "Might", "be", "COOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOL", "IFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF STUFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF JUSTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT WORKSDSDEDF!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" };
+        for (int i = 0; i < stringArray.Size(); i++)
+        {
+            Console.WriteLine(stringArray[i]);
         }
 
         var testButton = new Button

@@ -18,6 +18,7 @@ public unsafe partial class PackedStringArray
         }
         set
         {
+            
             var res = (void**)GDExtensionMain.extensionInterface.packed_string_array_operator_index(_internal_pointer, index);
             res[0] = StringMarshall.ToNative(value);
         }
