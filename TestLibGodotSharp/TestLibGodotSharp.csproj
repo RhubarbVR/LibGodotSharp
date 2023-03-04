@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-	  
+	  <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
   </PropertyGroup>
 	<ItemGroup>
 		<ProjectReference Include="..\libgodotsharp\LibGodotSharp.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="true" />

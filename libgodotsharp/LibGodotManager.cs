@@ -34,11 +34,13 @@ namespace LibGodotSharp
         internal static void SceneTreeMain(void* startup)
         {
             _sceneTreeLoad(SceneTree.Construct(startup));
+            GC.Collect();
         }
 
         internal static void ProjectSettingsMain(void* startup)
         {
             _projectSettingsLoad(ProjectSettings.Construct(startup));
+            GC.Collect();
         }
 
         internal static bool GDentryPointMain(GDExtensionInterface interface_, void* library, GDExtensionInitialization* expIntilzation)

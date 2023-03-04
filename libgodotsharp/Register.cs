@@ -26,7 +26,7 @@ namespace Generators
 			public Level level;
 		}
 
-		public static Data Generate(GeneratorExecutionContext context, INamedTypeSymbol c, bool notification, SpecialBase sBase)
+		public static Data Generate(GeneratorExecutionContext context, INamedTypeSymbol c, bool notification, bool virtualgen, SpecialBase sBase)
 		{
 			var gdName = (string)(c.GetAttributes().
 				SingleOrDefault(x => x.AttributeClass.Name == "RegisterAttribute").NamedArguments.
@@ -67,7 +67,7 @@ namespace Generators
 					__godot_name = new StringName("{{gdName}}");
 					var info = new GDExtensionClassCreationInfo() {
 						is_virtual = System.Convert.ToByte(false),
-						is_abstract = System.Convert.ToByte(false),
+						is_abstract = System.Convert.ToByte({{c.IsAbstract.ToString().ToLower()}}),
 						//set_func = &SetFunc,
 						//get_func = &GetFunc,
 						//get_property_list_func = &GetPropertyList,
@@ -80,7 +80,7 @@ namespace Generators
 						//unreference_func = &Unreference,
 						create_instance_func = SaftyRapper.GetFunctionPointerForDelegate(CreateObject),
 						free_instance_func = SaftyRapper.GetFunctionPointerForDelegate(FreeObject),
-						//get_virtual_func = &GetVirtual,
+						get_virtual_func = (IntPtr){{(virtualgen ? "SaftyRapper.GetFunctionPointerForDelegate(__RegisterVirtual)" : "0")}},
 						//get_rid_func = &GetRid,
 					};
 					GDExtensionMain.extensionInterface.classdb_register_extension_class(GDExtensionMain.library, __godot_name._internal_pointer, {{c.BaseType.Name}}.__godot_name._internal_pointer, info);
@@ -101,7 +101,7 @@ namespace Generators
 			}
 			""";
 
-			context.AddSource($"{c.Name}.gen.cs", source);
+			context.AddSource($"{c.Name}.reg.gen.cs", source);
 
 			var editorOnly = (bool)(c.GetAttributes().
 				SingleOrDefault(x => x.AttributeClass.Name == "RegisterAttribute").NamedArguments.

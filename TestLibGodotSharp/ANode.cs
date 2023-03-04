@@ -21,4 +21,18 @@ public partial class ANode : Node3D
     {
         RotateY(delta);
     }
+
+    public override void _Input(InputEvent @event)
+    {
+        if(@event is InputEventKey key)
+        {
+            if(key.Keycode == Key.Space)
+            {
+                if (key.IsPressed())
+                {
+                    Console.WriteLine("SPACE");
+                }
+            }
+        }
+    }
 }

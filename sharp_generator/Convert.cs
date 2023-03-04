@@ -376,10 +376,10 @@ public class Convert
         if (hasPointer)
         {
             file.WriteLine($"\t~{Fixer.Type(c.name, api)}() {{");
-            file.WriteLine($"\t\tif(_internal_pointer == null) {{ return; }}");
+            //file.WriteLine($"\t\tif(_internal_pointer == null) {{ return; }}");
             file.WriteLine($"\t\t__destructor(_internal_pointer);");
-            file.WriteLine($"\t\tGDExtensionMain.extensionInterface.mem_free(_internal_pointer);");
-            file.WriteLine($"\t\t_internal_pointer = null;");
+            //file.WriteLine($"\t\tGDExtensionMain.extensionInterface.mem_free(_internal_pointer);");
+            //file.WriteLine($"\t\t_internal_pointer = null;");
             file.WriteLine($"\t}}");
             file.WriteLine();
             file.WriteLine("\t[StructLayout(LayoutKind.Explicit, Size = StructSize)]");

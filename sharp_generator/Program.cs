@@ -9,7 +9,7 @@ namespace SharpGenerator
     {
         public static IntPtr GodotLibrary;
         public static string GodotRootDir;
-        public static bool skipScons = false;
+        public static bool skipScons = true;
         public static string GithubBuildVersion = null;
         public static void Warn(string message)
         {
@@ -167,7 +167,7 @@ namespace SharpGenerator
             }
             Directory.CreateDirectory(ginDir);
             var docs = Path.Combine(GodotRootDir, "doc", "classes") + "/";
-            var configName = "float_32";
+            var configName = "float_64";
             var api = Api.Create(pathToGenJson);
             var convert = new Convert(api, ginDir, docs, configName);
             convert.Emit();

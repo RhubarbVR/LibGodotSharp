@@ -14,12 +14,12 @@ namespace Generators
 		public void Execute(GeneratorExecutionContext context)
 		{
 #if DEBUG
-            //if (!Debugger.IsAttached)
-            //{
-            //    Debugger.Launch();
-            //}
+			//if (!Debugger.IsAttached)
+			//{
+			//	Debugger.Launch();
+			//}
 #endif
-            Debug.WriteLine("Execute code generator");
+			Debug.WriteLine("Execute code generator");
             try
             {
 				var rec = (SyntaxReciever)context.SyntaxReceiver!;
@@ -31,10 +31,11 @@ namespace Generators
 					var methods = new Methods();
 					var sBase = GetSpecialBase(c);
 					var notification = Notification.Generate(context, c);
-					Export.Generate(context, c, methods);
+                    var virtualgen = GenVirtual.Generate(context, c);
+                    Export.Generate(context, c, methods);
 					Signal.Generate(context, c);
 					methods.Generate(context, c);
-					var data = Register.Generate(context, c, notification, sBase);
+					var data = Register.Generate(context, c, notification, virtualgen, sBase);
 					classes.Add(data);
                     Debug.WriteLine($"Added class {cSyntax}");
                 }
