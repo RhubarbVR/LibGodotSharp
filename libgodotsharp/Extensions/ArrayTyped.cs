@@ -5,6 +5,43 @@ namespace GDExtension;
 
 public unsafe partial class Array<T> : Array, IList<T>, ICollection<T>, IEnumerable<T>, IEnumerable
 {
+    public Array() : base()
+    {
+        var (type, name) = GetVariantData;
+        GDExtensionMain.extensionInterface.array_set_typed(_internal_pointer, (uint)type, name._internal_pointer, new Variant()._internal_pointer);
+    }
+
+    public Array(Array array) : base(array, (long)GetVariantData.Item1, GetVariantData.Item2, new Variant())
+    {
+    }
+
+    public static (Variant.Type, StringName) GetVariantData
+    {
+        get
+        {
+            if (typeof(T) == typeof(string))
+            {
+                return (Variant.Type.String, new StringName());
+            }
+            if ((typeof(T) == typeof(float)) || typeof(T) == typeof(double))
+            {
+                return (Variant.Type.Float, new StringName());
+            }
+            if ((typeof(T) == typeof(byte)) || typeof(T) == typeof(sbyte) ||
+                (typeof(T) == typeof(short)) || typeof(T) == typeof(ushort) ||
+                (typeof(T) == typeof(int)) || typeof(T) == typeof(uint) ||
+                (typeof(T) == typeof(long)) || typeof(T) == typeof(ulong))
+            {
+                return (Variant.Type.Int, new StringName());
+            }
+            if (Enum.TryParse(typeof(T).Name, true, out Variant.Type type))
+            {
+                return (type, new StringName());
+            }
+            return (Variant.Type.Object, new StringName(typeof(T).Name));
+        }
+    }
+
     public new T this[int index]
     {
         get
