@@ -1,3 +1,7 @@
+## This has been deprecated for the new system in this [pull request](https://github.com/godotengine/godot/pull/72883).
+New system in setup to use Godot Existing C# system but still be able to run godot as a shared library still and pass though your existing Godot C#
+
+
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
